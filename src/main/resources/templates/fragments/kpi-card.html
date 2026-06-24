@@ -1,0 +1,9 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="kpi(label, value)" class="eventflow-kpi-card eventflow-kpi-accent p-3 h-100">
+    <div class="eventflow-kpi-label" th:text="${label}">Label</div>
+    <div class="h4 mb-0 eventflow-kpi-value" th:text="${value}">0</div>
+</div>
+</body>
+</html>

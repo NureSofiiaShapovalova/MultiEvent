@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>My Orders - EventFlow</title>
+</head>
+<body>
+<section class="mx-auto" style="max-width: 1120px;">
+    <div class="mb-4">
+        <h1 class="h3 mb-2">My orders</h1>
+        <p class="text-body-secondary mb-0">Your pending and completed checkout history.</p>
+    </div>
+
+    <div class="bg-white border rounded-4 shadow-sm p-3 p-md-4">
+        <div class="table-responsive" th:if="${!orders.isEmpty()}">
+            <table class="table align-middle">
+                <thead class="table-light">
+                <tr>
+                    <th scope="col">Event</th>
+                    <th scope="col">Status</th>
+                    <th scope="col" class="text-end">Total</th>
+                    <th scope="col" class="text-end">Expires</th>
+                    <th scope="col" class="text-end">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="order : ${orders}">
+                    <td>
+                        <div class="fw-semibold" th:text="${order.eventTitle()}">Event</div>
+                        <div class="text-body-secondary small" th:text="${order.createdAt()}">Created</div>
+                    </td>
+                    <td><span th:replace="~{fragments/order-status-badge :: orderStatusBadge(${order.status()})}"></span></td>
+                    <td class="text-end" th:text="${order.totalAmount() + ' ' + order.currency()}">0 USD</td>
+                    <td class="text-end" th:text="${order.expiresAt()}">2026-08-15</td>
+                    <td class="text-end">
+                        <a class="btn btn-outline-primary btn-sm" th:href="@{/orders/{orderId}(orderId=${order.orderId()})}">Details</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="text-center py-5" th:if="${orders.isEmpty()}">
+            <h2 class="h5 fw-semibold mb-2">No orders yet</h2>
+            <p class="text-body-secondary mb-4">Orders will appear here after you reserve tickets.</p>
+            <a th:href="@{/events}" class="btn btn-primary">Browse events</a>
+        </div>
+    </div>
+</section>
+</body>
+</html>

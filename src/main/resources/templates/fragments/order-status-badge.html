@@ -1,0 +1,10 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:fragment="orderStatusBadge(status)">
+<body>
+<span class="badge eventflow-status"
+      th:classappend="${status == 'PENDING_PAYMENT'} ? 'eventflow-status-warning' : (${status == 'PAID'} ? 'eventflow-status-success' : 'eventflow-status-muted')"
+      th:text="${status}">
+    Status
+</span>
+</body>
+</html>

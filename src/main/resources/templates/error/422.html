@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Request Error - EventFlow</title>
+</head>
+<body>
+<section>
+    <h1 class="h3">Request Error</h1>
+    <p class="text-body-secondary" th:text="${message} ?: 'The request could not be processed.'">The request could not be processed.</p>
+    <a th:href="@{/}" class="btn btn-primary">Go home</a>
+</section>
+</body>
+</html>

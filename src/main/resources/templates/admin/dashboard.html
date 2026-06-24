@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Admin Dashboard - EventFlow</title>
+</head>
+<body>
+<section>
+    <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+        <div>
+            <p class="eventflow-section-kicker mb-1">Platform control</p>
+            <h1 class="h3 fw-bold mb-1">Admin dashboard</h1>
+            <p class="text-body-secondary mb-0">Platform overview and moderation shortcuts</p>
+        </div>
+    </div>
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-4 g-3 mb-4">
+        <div class="col"><div class="eventflow-kpi-card eventflow-kpi-accent p-3 h-100"><div class="eventflow-kpi-label">Users</div><div class="h3 mb-0 eventflow-kpi-value" th:text="${dashboard.totalUsers()}">0</div></div></div>
+        <div class="col"><div class="eventflow-kpi-card eventflow-kpi-accent p-3 h-100"><div class="eventflow-kpi-label">Organizers</div><div class="h3 mb-0 eventflow-kpi-value" th:text="${dashboard.organizers()}">0</div></div></div>
+        <div class="col"><div class="eventflow-kpi-card eventflow-kpi-accent p-3 h-100"><div class="eventflow-kpi-label">Categories</div><div class="h3 mb-0 eventflow-kpi-value" th:text="${dashboard.categories()}">0</div></div></div>
+        <div class="col"><div class="eventflow-kpi-card eventflow-kpi-accent p-3 h-100"><div class="eventflow-kpi-label">Events</div><div class="h3 mb-0 eventflow-kpi-value" th:text="${dashboard.events()}">0</div></div></div>
+        <div class="col"><div class="eventflow-kpi-card eventflow-kpi-accent eventflow-kpi-accent-muted p-3 h-100"><div class="eventflow-kpi-label">Draft</div><div class="h3 mb-0 eventflow-kpi-value" th:text="${dashboard.draftEvents()}">0</div></div></div>
+        <div class="col"><div class="eventflow-kpi-card eventflow-kpi-accent eventflow-kpi-accent-warning p-3 h-100"><div class="eventflow-kpi-label">Review</div><div class="h3 mb-0 eventflow-kpi-value" th:text="${dashboard.reviewEvents()}">0</div></div></div>
+        <div class="col"><div class="eventflow-kpi-card eventflow-kpi-accent eventflow-kpi-accent-success p-3 h-100"><div class="eventflow-kpi-label">Published</div><div class="h3 mb-0 eventflow-kpi-value" th:text="${dashboard.publishedEvents()}">0</div></div></div>
+        <div class="col"><div class="eventflow-kpi-card eventflow-kpi-accent eventflow-kpi-accent-muted p-3 h-100"><div class="eventflow-kpi-label">Cancelled</div><div class="h3 mb-0 eventflow-kpi-value" th:text="${dashboard.cancelledEvents()}">0</div></div></div>
+        <div class="col"><div class="eventflow-kpi-card eventflow-kpi-accent eventflow-kpi-accent-warning p-3 h-100"><div class="eventflow-kpi-label">Failed payments</div><div class="h3 mb-0 eventflow-kpi-value" th:text="${dashboard.failedPayments()}">0</div></div></div>
+        <div class="col"><div class="eventflow-kpi-card eventflow-kpi-accent p-3 h-100"><div class="eventflow-kpi-label">Audit entries</div><div class="h3 mb-0 eventflow-kpi-value" th:text="${dashboard.auditEntries()}">0</div></div></div>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-lg-4"><a class="text-decoration-none" th:href="@{/admin/users}"><div class="eventflow-accent-card border rounded-4 bg-white shadow-sm p-3 h-100 fw-semibold">Users and roles</div></a></div>
+        <div class="col-lg-4"><a class="text-decoration-none" th:href="@{/admin/categories}"><div class="eventflow-accent-card border rounded-4 bg-white shadow-sm p-3 h-100 fw-semibold">Categories</div></a></div>
+        <div class="col-lg-4"><a class="text-decoration-none" th:href="@{/admin/events}"><div class="eventflow-accent-card border rounded-4 bg-white shadow-sm p-3 h-100 fw-semibold">Events</div></a></div>
+        <div class="col-lg-4"><a class="text-decoration-none" th:href="@{/admin/payments/issues}"><div class="eventflow-accent-card border rounded-4 bg-white shadow-sm p-3 h-100 fw-semibold">Payment issues</div></a></div>
+        <div class="col-lg-4"><a class="text-decoration-none" th:href="@{/admin/audit}"><div class="eventflow-accent-card border rounded-4 bg-white shadow-sm p-3 h-100 fw-semibold">Audit trail</div></a></div>
+        <div class="col-lg-4"><a class="text-decoration-none" th:href="@{/admin/reports}"><div class="eventflow-accent-card border rounded-4 bg-white shadow-sm p-3 h-100 fw-semibold">Reports</div></a></div>
+    </div>
+</section>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Notification Preferences - EventFlow</title>
+</head>
+<body>
+<section class="mx-auto" style="max-width: 720px;">
+    <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+        <div>
+            <h1 class="h3 fw-bold mb-1">Notification preferences</h1>
+            <p class="text-body-secondary mb-0">Control which email updates EventFlow may send.</p>
+        </div>
+        <a th:href="@{/profile}" class="btn btn-outline-secondary">Back to profile</a>
+    </div>
+
+    <form th:action="@{/profile/notifications}" th:object="${notificationPreferencesForm}" method="post" class="bg-white border rounded-4 shadow-sm p-3 p-md-4">
+        <div th:replace="~{profile/_notifications-form :: notificationFields}"></div>
+        <div class="d-grid d-sm-flex gap-2">
+            <button type="submit" class="btn btn-primary">Save preferences</button>
+            <a th:href="@{/profile}" class="btn btn-outline-secondary">Cancel</a>
+        </div>
+    </form>
+</section>
+</body>
+</html>

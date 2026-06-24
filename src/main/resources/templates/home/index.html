@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>EventFlow</title>
+</head>
+<body>
+<section class="py-4">
+    <div class="eventflow-pulse-hero p-4 p-lg-5 mb-5">
+        <div class="eventflow-pulse-content row align-items-center g-4">
+            <div class="col-lg-8">
+                <span class="badge rounded-pill text-bg-primary-subtle text-primary-emphasis mb-3">Event ticketing made simple</span>
+                <h1 class="display-5 fw-bold mb-3">Discover events and reserve your next ticket with EventFlow.</h1>
+                <p class="lead text-body-secondary mb-4">
+                    A clean event-management platform for browsing upcoming events, managing tickets, and keeping orders in one place.
+                </p>
+                <div class="d-flex flex-wrap gap-2 mb-4" aria-label="Popular event categories">
+                    <span class="eventflow-chip">Music</span>
+                    <span class="eventflow-chip">Conferences</span>
+                    <span class="eventflow-chip">Workshops</span>
+                    <span class="eventflow-chip">Community</span>
+                </div>
+                <div class="d-flex flex-wrap gap-2">
+                    <a th:href="@{/events}" class="btn btn-primary btn-lg">Browse events</a>
+                    <a th:href="@{/register}" class="btn btn-outline-primary btn-lg">Create account</a>
+                    <a th:href="@{/login}" class="btn btn-outline-secondary btn-lg">Login</a>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="eventflow-pulse-panel p-4 h-100">
+                    <div class="eventflow-pulse-mark eventflow-empty-mark mb-3">EF</div>
+                    <div class="text-primary-emphasis fw-bold mb-2">For attendees</div>
+                    <p class="mb-3 text-body-secondary">Search events, compare ticket options, and continue to secure checkout.</p>
+                    <div class="d-flex align-items-center gap-2 text-primary-emphasis fw-semibold">
+                        <span class="badge rounded-pill text-bg-primary">1</span>
+                        <span>Find</span>
+                        <span class="badge rounded-pill text-bg-primary">2</span>
+                        <span>Select</span>
+                        <span class="badge rounded-pill text-bg-primary">3</span>
+                        <span>Pay</span>
+                    </div>
+                    <div class="row g-2 mt-3">
+                        <div class="col-6">
+                            <div class="eventflow-pulse-stat p-3">
+                                <div class="small text-body-secondary">Browse</div>
+                                <div class="fw-bold">Catalog</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="eventflow-pulse-stat p-3">
+                                <div class="small text-body-secondary">Checkout</div>
+                                <div class="fw-bold">Ready</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mb-5">
+        <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-3">
+            <div>
+                <p class="eventflow-section-kicker mb-1">Coming soon</p>
+                <h2 class="h3 fw-bold mb-0">Upcoming events</h2>
+            </div>
+            <a th:href="@{/events}" class="btn btn-outline-primary">View all events</a>
+        </div>
+        <div th:if="${homepageView.upcomingEvents().isEmpty()}" class="eventflow-empty-state text-center p-5">
+            <div class="eventflow-empty-mark mb-3">EF</div>
+            <h3 class="h5 fw-semibold mb-2">No upcoming events yet</h3>
+            <p class="text-body-secondary mb-0">Published future events will appear here as soon as organizers add them.</p>
+        </div>
+        <div th:if="${!homepageView.upcomingEvents().isEmpty()}" class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
+            <div class="col" th:each="event : ${homepageView.upcomingEvents()}">
+                <div th:replace="~{fragments/event-card :: eventCard(${event})}"></div>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-3">
+            <div>
+                <p class="eventflow-section-kicker mb-1">Freshly published</p>
+                <h2 class="h3 fw-bold mb-0">Newest events</h2>
+            </div>
+        </div>
+        <div th:if="${homepageView.newestEvents().isEmpty()}" class="eventflow-empty-state text-center p-5">
+            <div class="eventflow-empty-mark mb-3">EF</div>
+            <h3 class="h5 fw-semibold mb-2">No published events yet</h3>
+            <p class="text-body-secondary mb-0">When organizers publish events, the newest listings will show up here.</p>
+        </div>
+        <div th:if="${!homepageView.newestEvents().isEmpty()}" class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
+            <div class="col" th:each="event : ${homepageView.newestEvents()}">
+                <div th:replace="~{fragments/event-card :: eventCard(${event})}"></div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Admin Reports - EventFlow</title>
+</head>
+<body>
+<section>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1">Admin reports</h1>
+            <p class="text-body-secondary mb-0">Platform KPIs and category activity</p>
+        </div>
+        <a th:href="@{/admin/reports/export/admin-kpis}" class="btn btn-outline-primary">Export CSV</a>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-3"><div th:replace="~{fragments/kpi-card :: kpi('Users', ${report.totalUsers()})}"></div></div>
+        <div class="col-md-3"><div th:replace="~{fragments/kpi-card :: kpi('Organizers', ${report.organizers()})}"></div></div>
+        <div class="col-md-3"><div th:replace="~{fragments/kpi-card :: kpi('Events', ${report.totalEvents()})}"></div></div>
+        <div class="col-md-3"><div th:replace="~{fragments/kpi-card :: kpi('Published events', ${report.publishedEvents()})}"></div></div>
+        <div class="col-md-3"><div th:replace="~{fragments/kpi-card :: kpi('Pending orders', ${report.pendingOrders()})}"></div></div>
+        <div class="col-md-3"><div th:replace="~{fragments/kpi-card :: kpi('Paid orders', ${report.paidOrders()})}"></div></div>
+        <div class="col-md-3"><div th:replace="~{fragments/kpi-card :: kpi('Failed payments', ${report.failedPayments()})}"></div></div>
+        <div class="col-md-3"><div th:replace="~{fragments/kpi-card :: kpi('Gross revenue', ${report.grossRevenue() + ' ' + report.currency()})}"></div></div>
+    </div>
+
+    <div class="table-responsive border rounded-4 shadow-sm bg-white">
+        <table class="table align-middle mb-0 eventflow-data-table">
+            <thead class="table-light">
+            <tr>
+                <th>Category</th>
+                <th class="text-end">Events</th>
+                <th class="text-end">Paid orders</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="row : ${report.categoryPopularity()}">
+                <td th:text="${row.categoryName()}">Concerts</td>
+                <td class="text-end" th:text="${row.eventCount()}">0</td>
+                <td class="text-end" th:text="${row.paidOrderCount()}">0</td>
+            </tr>
+            <tr th:if="${report.categoryPopularity().isEmpty()}">
+                <td colspan="3" class="text-body-secondary py-4">No category activity yet.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+</body>
+</html>

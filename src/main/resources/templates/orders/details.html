@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title th:text="${order.eventTitle() + ' - Order - EventFlow'}">Order - EventFlow</title>
+</head>
+<body>
+<section class="mx-auto" style="max-width: 960px;">
+    <div class="mb-4">
+        <h1 class="h3 mb-2" th:text="${order.eventTitle()}">Event title</h1>
+        <p class="text-body-secondary mb-0" th:text="${'Order #' + order.orderId()}">Order</p>
+    </div>
+
+    <div class="bg-white border rounded-4 shadow-sm p-3 p-md-4 mb-3">
+        <div class="d-flex justify-content-between flex-wrap gap-3 mb-3">
+            <div>
+                <div class="fw-semibold">Order status</div>
+                <div class="mt-1" th:replace="~{fragments/order-status-badge :: orderStatusBadge(${order.status()})}"></div>
+            </div>
+            <div class="text-sm-end">
+                <div class="h5 mb-1" th:text="${order.totalAmount() + ' ' + order.currency()}">Total</div>
+                <div class="small text-body-secondary" th:text="${'Expires: ' + order.expiresAt()}">Expires</div>
+                <div class="small text-body-secondary" th:text="${'Created: ' + order.createdAt()}">Created</div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                <tr>
+                    <th scope="col">Ticket</th>
+                    <th scope="col" class="text-end">Qty</th>
+                    <th scope="col" class="text-end">Unit</th>
+                    <th scope="col" class="text-end">Line total</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item : ${order.items()}">
+                    <td th:text="${item.ticketName()}">Ticket</td>
+                    <td class="text-end" th:text="${item.quantity()}">1</td>
+                    <td class="text-end" th:text="${item.unitPrice() + ' ' + item.currency()}">25 USD</td>
+                    <td class="text-end" th:text="${item.lineTotal() + ' ' + item.currency()}">25 USD</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+</body>
+</html>

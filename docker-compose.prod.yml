@@ -1,0 +1,57 @@
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:?POSTGRES_DB is required}
+      POSTGRES_USER: ${POSTGRES_USER:?POSTGRES_USER is required}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+    volumes:
+      - eventflow_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  app:
+    image: ${EVENTFLOW_IMAGE:-eventflow-app:latest}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SERVER_PORT: 8080
+      EVENTFLOW_DB_URL: jdbc:postgresql://db:5432/${POSTGRES_DB:?POSTGRES_DB is required}
+      EVENTFLOW_DB_USERNAME: ${POSTGRES_USER:?POSTGRES_USER is required}
+      EVENTFLOW_DB_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+      EVENTFLOW_MAIL_HOST: ${EVENTFLOW_MAIL_HOST:?EVENTFLOW_MAIL_HOST is required}
+      EVENTFLOW_MAIL_PORT: ${EVENTFLOW_MAIL_PORT:-587}
+      EVENTFLOW_MAIL_USERNAME: ${EVENTFLOW_MAIL_USERNAME:?EVENTFLOW_MAIL_USERNAME is required}
+      EVENTFLOW_MAIL_PASSWORD: ${EVENTFLOW_MAIL_PASSWORD:?EVENTFLOW_MAIL_PASSWORD is required}
+      EVENTFLOW_MAIL_FROM: ${EVENTFLOW_MAIL_FROM:?EVENTFLOW_MAIL_FROM is required}
+      EVENTFLOW_MAIL_SMTP_AUTH: ${EVENTFLOW_MAIL_SMTP_AUTH:-true}
+      EVENTFLOW_MAIL_SMTP_STARTTLS: ${EVENTFLOW_MAIL_SMTP_STARTTLS:-true}
+      EVENTFLOW_PAYMENT_PROVIDER: paypal
+      PAYPAL_MODE: ${PAYPAL_MODE:-live}
+      PAYPAL_CLIENT_ID: ${PAYPAL_CLIENT_ID:?PAYPAL_CLIENT_ID is required}
+      PAYPAL_CLIENT_SECRET: ${PAYPAL_CLIENT_SECRET:?PAYPAL_CLIENT_SECRET is required}
+      PAYPAL_WEBHOOK_ID: ${PAYPAL_WEBHOOK_ID:?PAYPAL_WEBHOOK_ID is required}
+      PAYPAL_CURRENCY: ${PAYPAL_CURRENCY:-EUR}
+      APP_PUBLIC_BASE_URL: ${APP_PUBLIC_BASE_URL:?APP_PUBLIC_BASE_URL is required}
+    ports:
+      - "${APP_HOST_PORT:-8080}:8080"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8080/actuator/health/readiness || curl -fsS http://localhost:8080/actuator/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+
+volumes:
+  eventflow_postgres_data:

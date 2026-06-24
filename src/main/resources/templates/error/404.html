@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Not Found - EventFlow</title>
+</head>
+<body>
+<section>
+    <h1 class="h3">Not Found</h1>
+    <p class="text-body-secondary" th:text="${message} ?: 'The requested page was not found.'">The requested page was not found.</p>
+    <a th:href="@{/}" class="btn btn-primary">Go home</a>
+</section>
+</body>
+</html>

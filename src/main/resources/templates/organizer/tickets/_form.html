@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:fragment="ticketTypeFields(submitLabel)">
+<body>
+<div class="row g-3">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+    <div class="col-md-8">
+        <label for="name" class="form-label fw-semibold">Name</label>
+        <input id="name" type="text" th:field="*{name}" class="form-control" th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'">
+        <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name error</div>
+    </div>
+    <div class="col-md-4">
+        <label for="currency" class="form-label fw-semibold">Currency</label>
+        <input id="currency" type="text" th:field="*{currency}" class="form-control" th:classappend="${#fields.hasErrors('currency')} ? 'is-invalid'" aria-describedby="currencyHelp" maxlength="3">
+        <div id="currencyHelp" class="form-text">Use a 3-letter currency code such as EUR or USD.</div>
+        <div class="invalid-feedback" th:if="${#fields.hasErrors('currency')}" th:errors="*{currency}">Currency error</div>
+    </div>
+    <div class="col-md-6">
+        <label for="price" class="form-label fw-semibold">Price</label>
+        <input id="price" type="number" step="0.01" min="0" th:field="*{price}" class="form-control" th:classappend="${#fields.hasErrors('price')} ? 'is-invalid'">
+        <div class="invalid-feedback" th:if="${#fields.hasErrors('price')}" th:errors="*{price}">Price error</div>
+    </div>
+    <div class="col-md-6">
+        <label for="maxPerOrder" class="form-label fw-semibold">Max per order</label>
+        <input id="maxPerOrder" type="number" min="1" th:field="*{maxPerOrder}" class="form-control" th:classappend="${#fields.hasErrors('maxPerOrder')} ? 'is-invalid'">
+        <div class="invalid-feedback" th:if="${#fields.hasErrors('maxPerOrder')}" th:errors="*{maxPerOrder}">Max per order error</div>
+    </div>
+    <div class="col-md-6">
+        <label for="totalQuantity" class="form-label fw-semibold">Total quantity</label>
+        <input id="totalQuantity" type="number" min="1" th:field="*{totalQuantity}" class="form-control" th:classappend="${#fields.hasErrors('totalQuantity')} ? 'is-invalid'">
+        <div class="invalid-feedback" th:if="${#fields.hasErrors('totalQuantity')}" th:errors="*{totalQuantity}">Quantity error</div>
+    </div>
+    <div class="col-md-6">
+        <label for="salesStart" class="form-label fw-semibold">Sales start</label>
+        <input id="salesStart" type="datetime-local" th:field="*{salesStart}" class="form-control" th:classappend="${#fields.hasErrors('salesStart')} ? 'is-invalid'">
+        <div class="invalid-feedback" th:if="${#fields.hasErrors('salesStart')}" th:errors="*{salesStart}">Start error</div>
+    </div>
+    <div class="col-md-6">
+        <label for="salesEnd" class="form-label fw-semibold">Sales end</label>
+        <input id="salesEnd" type="datetime-local" th:field="*{salesEnd}" class="form-control" th:classappend="${#fields.hasErrors('salesEnd')} ? 'is-invalid'">
+        <div class="invalid-feedback" th:if="${#fields.hasErrors('salesEnd')}" th:errors="*{salesEnd}">End error</div>
+    </div>
+    <div class="col-12">
+        <label for="description" class="form-label fw-semibold">Description</label>
+        <textarea id="description" th:field="*{description}" rows="4" class="form-control"></textarea>
+    </div>
+    <div class="col-12 d-grid d-sm-flex gap-2 pt-2">
+        <button type="submit" class="btn btn-primary" th:text="${submitLabel}">Save</button>
+        <a th:href="@{/organizer/events/{eventId}/tickets(eventId=${eventId})}" class="btn btn-outline-secondary">Back</a>
+    </div>
+</div>
+</body>
+</html>

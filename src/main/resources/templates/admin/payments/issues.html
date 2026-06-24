@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Payment Issues - Admin - EventFlow</title>
+</head>
+<body>
+<section>
+    <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+        <div>
+            <h1 class="h3 fw-bold mb-1">Payment issues</h1>
+            <p class="text-body-secondary mb-0">Inspect failed or attention-needed payment attempts.</p>
+        </div>
+        <a th:href="@{/admin}" class="btn btn-outline-secondary">Dashboard</a>
+    </div>
+
+    <div th:if="${payments.isEmpty()}" class="bg-white border rounded-4 shadow-sm text-center p-5">
+        <h2 class="h5 fw-semibold mb-2">No payment issues found</h2>
+        <p class="text-body-secondary mb-0">Failed or problematic payments will appear here.</p>
+    </div>
+
+    <div th:if="${!payments.isEmpty()}" class="table-responsive border rounded-4 shadow-sm bg-white">
+        <table class="table align-middle mb-0 eventflow-data-table">
+            <thead class="table-light">
+            <tr>
+                <th>Payment</th>
+                <th>Status</th>
+                <th>Amount</th>
+                <th>Provider</th>
+                <th>Failure</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="payment : ${payments}">
+                <td>
+                    <div class="fw-semibold" th:text="${payment.eventTitle()}">Event title</div>
+                    <div class="text-body-secondary small" th:text="${payment.customerEmail()}">customer@example.com</div>
+                    <div class="text-body-secondary small" th:text="${'Order status: ' + payment.orderStatus()}">Order status</div>
+                </td>
+                <td>
+                    <span th:replace="~{fragments/payment-status-badge :: paymentStatusBadge(${payment.paymentStatus().name()})}"></span>
+                    <div class="small text-body-secondary mt-1" th:text="${payment.attemptCount() + ' attempts'}">Attempts</div>
+                </td>
+                <td th:text="${payment.amount() + ' ' + payment.currency()}">0 USD</td>
+                <td class="small text-body-secondary">
+                    <div th:text="${payment.providerName()}">Provider</div>
+                    <div class="text-break" th:text="${payment.providerReference()}">Reference</div>
+                </td>
+                <td class="small text-body-secondary">
+                    <div th:text="${payment.failureReason() ?: 'No failure reason'}">Reason</div>
+                    <div th:text="${payment.startedAt()}">Started</div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+</body>
+</html>

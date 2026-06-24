@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Create Ticket Type - EventFlow</title>
+</head>
+<body>
+<section>
+    <div class="mb-4">
+        <h1 class="h3 fw-bold mb-1">Create ticket type</h1>
+        <p class="text-body-secondary mb-0">Set ticket price, sales window, and starting inventory.</p>
+    </div>
+    <form th:action="@{/organizer/events/{eventId}/tickets(eventId=${eventId})}" th:object="${ticketForm}" method="post" class="bg-white border rounded-4 shadow-sm p-3 p-md-4">
+        <div th:replace="~{organizer/tickets/_form :: ticketTypeFields('Create ticket type')}"></div>
+    </form>
+</section>
+</body>
+</html>

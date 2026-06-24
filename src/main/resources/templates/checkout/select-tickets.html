@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title th:text="${event.title() + ' - Checkout - EventFlow'}">Checkout - EventFlow</title>
+</head>
+<body>
+<section class="mx-auto" style="max-width: 1120px;">
+    <div class="mb-4">
+        <span class="badge text-bg-secondary mb-2" th:text="${event.categoryName()}">Category</span>
+        <h1 class="display-6 fw-semibold mb-2" th:text="${event.title()}">Event title</h1>
+        <p class="lead text-body-secondary mb-0" th:text="${event.shortDescription()}">Short description</p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <img class="img-fluid rounded border mb-3" th:if="${event.coverImageUrl()}" th:src="${event.coverImageUrl()}" th:alt="${event.title()}">
+            <div class="bg-white border rounded p-3">
+                <h2 class="h5">Select tickets</h2>
+                <p class="mb-0 text-body-secondary" th:text="${event.fullDescription()}">Full description</p>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="bg-white border rounded p-3 mb-3">
+                <h2 class="h5">Event details</h2>
+                <p class="mb-1" th:text="${event.venueName()}">Venue</p>
+                <p class="mb-1" th:text="${event.venueAddressLine()}">Address</p>
+                <p class="mb-0 text-body-secondary" th:text="${event.venueCity() + ', ' + event.venueCountry()}">City, Country</p>
+            </div>
+            <div class="bg-white border rounded p-3">
+                <h2 class="h5">When</h2>
+                <p class="mb-1" th:text="${#temporals.format(event.startsAt(), 'dd MMM yyyy HH:mm')}">Start</p>
+                <p class="mb-0 text-body-secondary" th:text="${#temporals.format(event.endsAt(), 'dd MMM yyyy HH:mm')}">End</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white border rounded-4 shadow-sm p-3 p-md-4 mt-4">
+        <div class="mb-3">
+            <h2 class="h4 fw-bold mb-1">Ticket selection</h2>
+            <p class="text-body-secondary mb-0">Choose at least one ticket type and enter the quantity you want to reserve.</p>
+        </div>
+        <form th:action="@{/events/{slug}/checkout(slug=${event.slug()})}" th:object="${checkoutForm}" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('selectionChosen')}" th:errors="*{selectionChosen}">
+                Select at least one ticket.
+            </div>
+            <div class="row row-cols-1 row-cols-lg-2 g-3">
+                <div class="col" th:each="line, stat : *{selections}">
+                    <div class="border rounded-4 h-100 p-3 p-md-4">
+                        <input type="hidden" th:field="*{selections[__${stat.index}__].ticketTypeId}">
+                        <input type="hidden" th:field="*{selections[__${stat.index}__].ticketName}">
+                        <input type="hidden" th:field="*{selections[__${stat.index}__].description}">
+                        <input type="hidden" th:field="*{selections[__${stat.index}__].price}">
+                        <input type="hidden" th:field="*{selections[__${stat.index}__].currency}">
+                        <input type="hidden" th:field="*{selections[__${stat.index}__].maxPerOrder}">
+                        <input type="hidden" th:field="*{selections[__${stat.index}__].availableQuantity}">
+                        <input type="hidden" th:field="*{selections[__${stat.index}__].purchasable}">
+                        <input type="hidden" th:field="*{selections[__${stat.index}__].availabilityLabel}">
+                        <div class="d-flex flex-wrap justify-content-between gap-3 mb-2">
+                            <div>
+                                <div class="fw-semibold" th:text="${line.ticketName}">Ticket name</div>
+                                <div class="text-body-secondary small" th:text="${line.description}">Description</div>
+                            </div>
+                            <span class="badge rounded-pill align-self-start" th:classappend="${line.purchasable} ? 'text-bg-success' : 'text-bg-secondary'" th:text="${line.availabilityLabel}">Availability</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div class="h5 mb-0" th:text="${line.price + ' ' + line.currency}">Price</div>
+                            <div class="text-body-secondary small" th:text="${'Available: ' + line.availableQuantity}">Available</div>
+                        </div>
+                        <div class="text-body-secondary small mb-3" th:text="${'Max per order: ' + line.maxPerOrder}">Max per order</div>
+                        <label class="form-label fw-semibold" th:for="${'quantity-' + stat.index}">Quantity</label>
+                        <input th:id="${'quantity-' + stat.index}" type="number" min="0" th:field="*{selections[__${stat.index}__].quantity}" class="form-control" th:classappend="${#fields.hasErrors('selections[' + stat.index + '].quantity')} ? 'is-invalid'">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('selections[' + stat.index + '].quantity')}" th:errors="*{selections[__${stat.index}__].quantity}">Quantity error</div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-4 d-grid d-sm-flex justify-content-sm-end">
+                <button type="submit" class="btn btn-primary btn-lg">Create order</button>
+            </div>
+        </form>
+    </div>
+</section>
+</body>
+</html>

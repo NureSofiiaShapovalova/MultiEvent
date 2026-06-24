@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Audit Trail - Admin - EventFlow</title>
+</head>
+<body>
+<section>
+    <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+        <div>
+            <h1 class="h3 fw-bold mb-1">Audit trail</h1>
+            <p class="text-body-secondary mb-0">Review administrative and organizer-side actions.</p>
+        </div>
+        <a th:href="@{/admin}" class="btn btn-outline-secondary">Dashboard</a>
+    </div>
+
+    <div th:if="${auditEntries.isEmpty()}" class="bg-white border rounded-4 shadow-sm text-center p-5">
+        <h2 class="h5 fw-semibold mb-2">No audit entries found</h2>
+        <p class="text-body-secondary mb-0">Traceable platform actions will appear here.</p>
+    </div>
+
+    <div th:if="${!auditEntries.isEmpty()}" class="table-responsive border rounded-4 shadow-sm bg-white">
+        <table class="table align-middle mb-0 eventflow-data-table">
+            <thead class="table-light">
+            <tr>
+                <th>When</th>
+                <th>Actor</th>
+                <th>Target</th>
+                <th>Action</th>
+                <th>Details</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="entry : ${auditEntries}">
+                <td th:text="${entry.createdAt()}">Time</td>
+                <td th:text="${entry.actorEmail() ?: 'System'}">Actor</td>
+                <td>
+                    <div th:text="${entry.targetType()}">Target</div>
+                    <div class="text-body-secondary small text-break" th:text="${entry.targetId()}">Target id</div>
+                </td>
+                <td th:text="${entry.action()}">Action</td>
+                <td class="small text-body-secondary" th:text="${entry.details() ?: 'No details'}">Details</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+</body>
+</html>

@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Server Error - EventFlow</title>
+</head>
+<body>
+<section>
+    <h1 class="h3">Server Error</h1>
+    <p class="text-body-secondary">Something went wrong. Please try again later.</p>
+    <a th:href="@{/}" class="btn btn-primary">Go home</a>
+</section>
+</body>
+</html>

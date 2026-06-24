@@ -1,0 +1,30 @@
+server:
+  port: ${SERVER_PORT:8081}
+
+spring:
+  datasource:
+    url: ${EVENTFLOW_DB_URL:jdbc:postgresql://localhost:5432/eventflow}
+    username: ${EVENTFLOW_DB_USERNAME:postgres}
+    password: ${EVENTFLOW_DB_PASSWORD:postgres}
+  mail:
+    host: ${EVENTFLOW_MAIL_HOST:localhost}
+    port: ${EVENTFLOW_MAIL_PORT:1025}
+    username: ${EVENTFLOW_MAIL_USERNAME:}
+    password: ${EVENTFLOW_MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: false
+  jpa:
+    show-sql: false
+
+eventflow:
+  mail:
+    from: ${EVENTFLOW_MAIL_FROM:no-reply@eventflow.local}
+
+logging:
+  level:
+    org.hibernate.SQL: warn
+    org.hibernate.orm.jdbc.bind: warn

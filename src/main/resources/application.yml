@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: eventflow
+  profiles:
+    default: local
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+  thymeleaf:
+    cache: false
+
+server:
+  port: ${SERVER_PORT:8080}
+
+eventflow:
+  payment:
+    provider: ${EVENTFLOW_PAYMENT_PROVIDER:local}
+    paypal:
+      mode: ${PAYPAL_MODE:sandbox}
+      client-id: ${PAYPAL_CLIENT_ID:}
+      client-secret: ${PAYPAL_CLIENT_SECRET:}
+      webhook-id: ${PAYPAL_WEBHOOK_ID:}
+      currency: ${PAYPAL_CURRENCY:EUR}
+      public-base-url: ${APP_PUBLIC_BASE_URL:http://localhost:8081}

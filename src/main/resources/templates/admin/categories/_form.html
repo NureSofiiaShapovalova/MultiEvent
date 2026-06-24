@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:fragment="categoryFields">
+<body>
+<div class="mb-3">
+    <label for="name" class="form-label fw-semibold">Name</label>
+    <input id="name" type="text" class="form-control" th:field="*{name}" th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'">
+    <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name error</div>
+</div>
+<div class="mb-3">
+    <label for="slug" class="form-label fw-semibold">Slug</label>
+    <input id="slug" type="text" class="form-control" th:field="*{slug}" th:classappend="${#fields.hasErrors('slug')} ? 'is-invalid'" aria-describedby="categorySlugHelp">
+    <div id="categorySlugHelp" class="form-text">Use a URL-friendly value, for example: concerts.</div>
+    <div class="invalid-feedback" th:if="${#fields.hasErrors('slug')}" th:errors="*{slug}">Slug error</div>
+</div>
+</body>
+</html>

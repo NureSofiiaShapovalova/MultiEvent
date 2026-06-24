@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Profile - EventFlow</title>
+</head>
+<body>
+<section class="mx-auto" style="max-width: 720px;">
+        <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+            <div>
+                <h1 class="h3 mb-1">Profile</h1>
+                <p class="text-body-secondary mb-0" th:text="${currentUser.email()}">user@example.com</p>
+            </div>
+            <div class="d-flex gap-2">
+                <a th:href="@{/profile/notifications}" class="btn btn-outline-secondary">Notifications</a>
+                <a th:href="@{/profile/edit}" class="btn btn-primary">Edit</a>
+            </div>
+        </div>
+
+        <dl class="row bg-white border rounded p-3 mb-0">
+            <dt class="col-sm-4">First name</dt>
+            <dd class="col-sm-8" th:text="${currentUser.firstName()} ?: 'Not specified'">Not specified</dd>
+
+            <dt class="col-sm-4">Last name</dt>
+            <dd class="col-sm-8" th:text="${currentUser.lastName()} ?: 'Not specified'">Not specified</dd>
+
+            <dt class="col-sm-4">Phone</dt>
+            <dd class="col-sm-8" th:text="${currentUser.phoneNumber()} ?: 'Not specified'">Not specified</dd>
+
+            <dt class="col-sm-4">City</dt>
+            <dd class="col-sm-8" th:text="${currentUser.city()} ?: 'Not specified'">Not specified</dd>
+
+            <dt class="col-sm-4">Bio</dt>
+            <dd class="col-sm-8" th:text="${currentUser.bio()} ?: 'Not specified'">Not specified</dd>
+
+            <dt class="col-sm-4">Roles</dt>
+            <dd class="col-sm-8">
+                <span th:each="role : ${currentUser.roles()}" class="badge text-bg-secondary me-1" th:text="${role.name()}">ROLE_USER</span>
+            </dd>
+        </dl>
+</section>
+</body>
+</html>

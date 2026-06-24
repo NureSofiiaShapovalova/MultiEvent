@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:fragment="statusBadge(status)">
+<body>
+<span th:switch="${status != null ? status.name() : ''}">
+    <span th:case="'DRAFT'" class="eventflow-status eventflow-status-muted">Draft</span>
+    <span th:case="'REVIEW'" class="eventflow-status eventflow-status-warning">Review</span>
+    <span th:case="'PUBLISHED'" class="eventflow-status eventflow-status-success">Published</span>
+    <span th:case="'CANCELLED'" class="eventflow-status eventflow-status-danger">Cancelled</span>
+    <span th:case="'FINISHED'" class="eventflow-status eventflow-status-muted">Finished</span>
+    <span th:case="*" class="eventflow-status eventflow-status-muted">Unknown</span>
+</span>
+</body>
+</html>

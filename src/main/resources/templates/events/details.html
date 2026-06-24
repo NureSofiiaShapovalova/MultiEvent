@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title th:text="${event.title()} + ' - EventFlow'">EventFlow</title>
+</head>
+<body>
+<section class="pb-4">
+    <div class="mb-4">
+        <a th:href="@{/events}" class="btn btn-sm btn-outline-secondary mb-3">Back to events</a>
+        <div class="row align-items-end g-3">
+            <div class="col-lg-8">
+                <span class="eventflow-badge eventflow-badge-soft px-3 py-2 mb-3" th:text="${event.categoryName()}">Category</span>
+                <h1 class="display-5 fw-bold mb-3" th:text="${event.title()}">Event title</h1>
+                <p class="lead text-body-secondary mb-0" th:text="${event.shortDescription()}">Short description</p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <a th:if="${!event.ticketOptions().isEmpty()}" href="#tickets" class="btn btn-primary btn-lg px-4">Choose tickets</a>
+                <a th:if="${event.ticketOptions().isEmpty()}" th:href="@{/events}" class="btn btn-outline-primary btn-lg px-4">Browse more events</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="ratio ratio-16x9 eventflow-event-card-media rounded-4 shadow-sm overflow-hidden mb-4">
+                <img class="w-100 h-100 object-fit-cover" th:if="${event.coverImageUrl()}" th:src="${event.coverImageUrl()}" th:alt="${event.title()}">
+                <div class="d-flex align-items-center justify-content-center text-primary-emphasis fw-bold fs-3" th:unless="${event.coverImageUrl()}">EventFlow</div>
+            </div>
+
+            <div class="eventflow-accent-card bg-white border rounded-4 shadow-sm p-4 mb-4">
+                <h2 class="h4 fw-bold mb-3">About this event</h2>
+                <p class="mb-0 text-body-secondary" th:text="${event.fullDescription()}">Full description</p>
+            </div>
+
+            <div id="tickets" class="eventflow-accent-card bg-white border rounded-4 shadow-sm p-4 mb-4">
+                <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-3">
+                    <div>
+                        <p class="eventflow-section-kicker mb-1">Tickets</p>
+                        <h2 class="h4 fw-bold mb-0">Choose your ticket</h2>
+                    </div>
+                    <span class="badge rounded-pill text-bg-light border px-3 py-2" th:text="|${event.ticketOptions().size()} options|">0 options</span>
+                </div>
+                <div th:if="${event.ticketOptions().isEmpty()}" class="eventflow-empty-state text-center p-4">
+                    <div class="eventflow-empty-mark mb-3">EF</div>
+                    <h3 class="h6 fw-semibold mb-2">Tickets are not available yet</h3>
+                    <p class="text-body-secondary mb-0">Check back later or browse other published events.</p>
+                </div>
+                <div th:if="${!event.ticketOptions().isEmpty()}" class="row row-cols-1 row-cols-md-2 g-3">
+                    <div class="col" th:each="ticketOption : ${event.ticketOptions()}">
+                        <div th:replace="~{fragments/ticket-option-card :: ticketOptionCard(${ticketOption}, ${event.slug()})}"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="eventflow-accent-card bg-white border rounded-4 shadow-sm p-4" th:if="${!event.imageUrls().isEmpty()}">
+                <h2 class="h4 fw-bold mb-3">Gallery</h2>
+                <div class="row row-cols-2 row-cols-lg-4 g-3">
+                    <div class="col" th:each="imageUrl : ${event.imageUrls()}">
+                        <div class="ratio ratio-1x1 rounded-4 overflow-hidden border">
+                            <img class="w-100 h-100 object-fit-cover" th:src="${imageUrl}" th:alt="${event.title()}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <aside class="col-lg-4">
+            <div class="position-sticky top-0">
+                <div class="eventflow-meta-card bg-white border rounded-4 shadow-sm p-4 mb-4">
+                    <h2 class="h5 fw-bold mb-3">Event details</h2>
+                    <dl class="row g-3 mb-0">
+                        <dt class="col-4 text-body-secondary">Date</dt>
+                        <dd class="col-8 mb-0">
+                            <div class="fw-semibold" th:text="${#temporals.format(event.startsAt(), 'dd MMM yyyy')}">Date</div>
+                            <div class="text-body-secondary small" th:text="|${#temporals.format(event.startsAt(), 'HH:mm')} - ${#temporals.format(event.endsAt(), 'HH:mm')}|">Time</div>
+                        </dd>
+
+                        <dt class="col-4 text-body-secondary">City</dt>
+                        <dd class="col-8 mb-0 fw-semibold" th:text="${event.venueCity()}">City</dd>
+
+                        <dt class="col-4 text-body-secondary">Venue</dt>
+                        <dd class="col-8 mb-0">
+                            <div class="fw-semibold" th:text="${event.venueName()}">Venue</div>
+                            <div class="text-body-secondary small" th:text="${event.venueAddressLine()}">Address</div>
+                            <div class="text-body-secondary small" th:text="|${event.venueCity()}, ${event.venueCountry()}|">City, Country</div>
+                        </dd>
+
+                        <dt class="col-4 text-body-secondary">Category</dt>
+                        <dd class="col-8 mb-0">
+                            <span class="badge rounded-pill text-bg-primary-subtle text-primary-emphasis" th:text="${event.categoryName()}">Category</span>
+                        </dd>
+                    </dl>
+                </div>
+
+                <div class="eventflow-accent-card bg-white border rounded-4 shadow-sm p-4 mb-4">
+                    <h2 class="h5 fw-bold mb-3">Organizer</h2>
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="rounded-circle bg-primary-subtle text-primary-emphasis d-flex align-items-center justify-content-center fw-bold flex-shrink-0" style="width: 48px; height: 48px;">EF</div>
+                        <div class="flex-grow-1 overflow-hidden">
+                            <div class="fw-semibold">Event organizer</div>
+                            <div class="text-body-secondary small text-break" th:text="${event.organizerEmail()}">organizer@example.com</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="eventflow-gradient-panel rounded-4 shadow-sm p-4">
+                    <h2 class="h5 fw-bold mb-2">Ready to attend?</h2>
+                    <p class="mb-3 text-white-50">Review available ticket options and continue to checkout.</p>
+                    <a th:if="${!event.ticketOptions().isEmpty()}" href="#tickets" class="btn btn-light w-100">Choose tickets</a>
+                    <a th:if="${event.ticketOptions().isEmpty()}" th:href="@{/events}" class="btn btn-light w-100">Find another event</a>
+                </div>
+            </div>
+        </aside>
+    </div>
+</section>
+</body>
+</html>

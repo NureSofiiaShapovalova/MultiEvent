@@ -1,0 +1,39 @@
+spring:
+  datasource:
+    url: ${EVENTFLOW_DB_URL:jdbc:postgresql://db:5432/eventflow}
+    username: ${EVENTFLOW_DB_USERNAME:eventflow}
+    password: ${EVENTFLOW_DB_PASSWORD:eventflow_dev_password}
+  mail:
+    host: ${EVENTFLOW_MAIL_HOST:mailpit}
+    port: ${EVENTFLOW_MAIL_PORT:1025}
+    username: ${EVENTFLOW_MAIL_USERNAME:}
+    password: ${EVENTFLOW_MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: ${EVENTFLOW_MAIL_SMTP_AUTH:false}
+          starttls:
+            enable: ${EVENTFLOW_MAIL_SMTP_STARTTLS:false}
+  jpa:
+    show-sql: false
+  thymeleaf:
+    cache: true
+
+eventflow:
+  mail:
+    from: ${EVENTFLOW_MAIL_FROM:no-reply@eventflow.local}
+
+logging:
+  level:
+    org.hibernate.SQL: warn
+    org.hibernate.orm.jdbc.bind: warn
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true

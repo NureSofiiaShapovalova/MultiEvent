@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Organizer Reports - EventFlow</title>
+</head>
+<body>
+<section>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1">Organizer reports</h1>
+            <p class="text-body-secondary mb-0">Sales and revenue for your events</p>
+        </div>
+        <a th:href="@{/organizer/reports/export/organizer-revenue}" class="btn btn-outline-primary">Export CSV</a>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-3"><div th:replace="~{fragments/kpi-card :: kpi('Paid orders', ${report.paidOrders()})}"></div></div>
+        <div class="col-md-3"><div th:replace="~{fragments/kpi-card :: kpi('Tickets sold', ${report.ticketsSold()})}"></div></div>
+        <div class="col-md-3"><div th:replace="~{fragments/kpi-card :: kpi('Revenue', ${report.revenue() + ' ' + report.currency()})}"></div></div>
+        <div class="col-md-3"><div th:replace="~{fragments/kpi-card :: kpi('Sold-out ticket types', ${report.soldOutTicketTypes()})}"></div></div>
+    </div>
+
+    <div class="table-responsive border rounded-4 shadow-sm bg-white">
+        <table class="table align-middle mb-0 eventflow-data-table">
+            <thead class="table-light">
+            <tr>
+                <th>Event</th>
+                <th class="text-end">Paid orders</th>
+                <th class="text-end">Tickets sold</th>
+                <th class="text-end">Revenue</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="row : ${report.revenueRows()}">
+                <td th:text="${row.eventTitle()}">Rock Night</td>
+                <td class="text-end" th:text="${row.paidOrders()}">0</td>
+                <td class="text-end" th:text="${row.ticketsSold()}">0</td>
+                <td class="text-end" th:text="${row.revenue() + ' ' + row.currency()}">0 USD</td>
+            </tr>
+            <tr th:if="${report.revenueRows().isEmpty()}">
+                <td colspan="4" class="text-body-secondary py-4">No paid orders yet.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+</body>
+</html>

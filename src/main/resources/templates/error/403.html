@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Forbidden - EventFlow</title>
+</head>
+<body>
+<section>
+    <h1 class="h3">Forbidden</h1>
+    <p class="text-body-secondary" th:text="${message} ?: 'You do not have access to this page.'">You do not have access to this page.</p>
+    <a th:href="@{/}" class="btn btn-primary">Go home</a>
+</section>
+</body>
+</html>

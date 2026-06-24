@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:fragment="eventFields(categories, submitLabel)">
+<body>
+<div class="row g-3">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+    <div class="col-md-8">
+        <label for="title" class="form-label fw-semibold">Title</label>
+        <input id="title" type="text" th:field="*{title}" class="form-control" th:classappend="${#fields.hasErrors('title')} ? 'is-invalid'" autocomplete="off">
+        <div class="invalid-feedback" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Title error</div>
+    </div>
+    <div class="col-md-4">
+        <label for="slug" class="form-label fw-semibold">Slug</label>
+        <input id="slug" type="text" th:field="*{slug}" class="form-control" th:classappend="${#fields.hasErrors('slug')} ? 'is-invalid'" aria-describedby="slugHelp" autocomplete="off">
+        <div id="slugHelp" class="form-text">Use a short URL-friendly value, for example: summer-festival.</div>
+        <div class="invalid-feedback" th:if="${#fields.hasErrors('slug')}" th:errors="*{slug}">Slug error</div>
+    </div>
+    <div class="col-md-8">
+        <label for="shortDescription" class="form-label fw-semibold">Short description</label>
+        <textarea id="shortDescription" th:field="*{shortDescription}" rows="3" class="form-control" th:classappend="${#fields.hasErrors('shortDescription')} ? 'is-invalid'"></textarea>
+        <div class="invalid-feedback" th:if="${#fields.hasErrors('shortDescription')}" th:errors="*{shortDescription}">Short description error</div>
+    </div>
+    <div class="col-md-4">
+        <label for="categoryId" class="form-label fw-semibold">Category</label>
+        <select id="categoryId" th:field="*{categoryId}" class="form-select" th:classappend="${#fields.hasErrors('categoryId')} ? 'is-invalid'">
+            <option value="">Choose...</option>
+            <option th:each="category : ${categories}" th:value="${category.id()}" th:text="${category.name()}">Category</option>
+        </select>
+        <div class="invalid-feedback" th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}">Category error</div>
+    </div>
+    <div class="col-12">
+        <label for="fullDescription" class="form-label fw-semibold">Full description</label>
+        <textarea id="fullDescription" th:field="*{fullDescription}" rows="6" class="form-control" th:classappend="${#fields.hasErrors('fullDescription')} ? 'is-invalid'"></textarea>
+        <div class="invalid-feedback" th:if="${#fields.hasErrors('fullDescription')}" th:errors="*{fullDescription}">Full description error</div>
+    </div>
+    <div class="col-md-6">
+        <label for="venueName" class="form-label fw-semibold">Venue name</label>
+        <input id="venueName" type="text" th:field="*{venueName}" class="form-control" th:classappend="${#fields.hasErrors('venueName')} ? 'is-invalid'" autocomplete="organization">
+        <div class="invalid-feedback" th:if="${#fields.hasErrors('venueName')}" th:errors="*{venueName}">Venue error</div>
+    </div>
+    <div class="col-md-6">
+        <label for="city" class="form-label fw-semibold">City</label>
+        <input id="city" type="text" th:field="*{city}" class="form-control" th:classappend="${#fields.hasErrors('city')} ? 'is-invalid'" autocomplete="address-level2">
+        <div class="invalid-feedback" th:if="${#fields.hasErrors('city')}" th:errors="*{city}">City error</div>
+    </div>
+    <div class="col-md-6">
+        <label for="addressLine" class="form-label fw-semibold">Address line</label>
+        <input id="addressLine" type="text" th:field="*{addressLine}" class="form-control" th:classappend="${#fields.hasErrors('addressLine')} ? 'is-invalid'" autocomplete="street-address">
+        <div class="invalid-feedback" th:if="${#fields.hasErrors('addressLine')}" th:errors="*{addressLine}">Address error</div>
+    </div>
+    <div class="col-md-3">
+        <label for="postalCode" class="form-label fw-semibold">Postal code</label>
+        <input id="postalCode" type="text" th:field="*{postalCode}" class="form-control" th:classappend="${#fields.hasErrors('postalCode')} ? 'is-invalid'" autocomplete="postal-code">
+        <div class="invalid-feedback" th:if="${#fields.hasErrors('postalCode')}" th:errors="*{postalCode}">Postal code error</div>
+    </div>
+    <div class="col-md-3">
+        <label for="country" class="form-label fw-semibold">Country</label>
+        <input id="country" type="text" th:field="*{country}" class="form-control" th:classappend="${#fields.hasErrors('country')} ? 'is-invalid'" autocomplete="country-name">
+        <div class="invalid-feedback" th:if="${#fields.hasErrors('country')}" th:errors="*{country}">Country error</div>
+    </div>
+    <div class="col-md-6">
+        <label for="startsAt" class="form-label fw-semibold">Starts at</label>
+        <input id="startsAt" type="datetime-local" th:field="*{startsAt}" class="form-control" th:classappend="${#fields.hasErrors('startsAt')} ? 'is-invalid'">
+        <div class="invalid-feedback" th:if="${#fields.hasErrors('startsAt')}" th:errors="*{startsAt}">Start date error</div>
+    </div>
+    <div class="col-md-6">
+        <label for="endsAt" class="form-label fw-semibold">Ends at</label>
+        <input id="endsAt" type="datetime-local" th:field="*{endsAt}" class="form-control" th:classappend="${#fields.hasErrors('endsAt')} ? 'is-invalid'">
+        <div class="invalid-feedback" th:if="${#fields.hasErrors('endsAt')}" th:errors="*{endsAt}">End date error</div>
+    </div>
+    <div class="col-12">
+        <label for="imageUrlsText" class="form-label fw-semibold">Image URLs</label>
+        <textarea id="imageUrlsText" th:field="*{imageUrlsText}" rows="4" class="form-control" placeholder="One URL per line" aria-describedby="imageUrlsHelp"></textarea>
+        <div id="imageUrlsHelp" class="form-text">Add one image URL per line. The first image is used as the event cover.</div>
+    </div>
+    <div class="col-12 d-grid d-sm-flex gap-2 pt-2">
+        <button type="submit" class="btn btn-primary" th:text="${submitLabel}">Save</button>
+        <a th:href="@{/organizer/events}" class="btn btn-outline-secondary">Back</a>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Edit Ticket Type - EventFlow</title>
+</head>
+<body>
+<section>
+    <div class="mb-4">
+        <h1 class="h3 fw-bold mb-1">Edit ticket type</h1>
+        <p class="text-body-secondary mb-0">Adjust public ticket details while preserving inventory integrity.</p>
+    </div>
+    <form th:action="@{/organizer/events/{eventId}/tickets/{ticketTypeId}(eventId=${eventId}, ticketTypeId=${ticketTypeId})}" th:object="${ticketForm}" method="post" class="bg-white border rounded-4 shadow-sm p-3 p-md-4">
+        <div th:replace="~{organizer/tickets/_form :: ticketTypeFields('Save changes')}"></div>
+    </form>
+</section>
+</body>
+</html>
