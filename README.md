@@ -60,7 +60,7 @@ Render sets `DATABASE_URL` for the managed Postgres database. EventFlow converts
 2. In Render, choose `New` -> `Blueprint`.
 3. Connect the `NureSofiiaShapovalova/EventFlow` repository.
 4. Select `render.yaml`.
-5. Confirm the `eventflow-shapovalova` web service and `eventflow-db` Postgres database.
+5. Confirm the `nure-eventflow` web service and `eventflow-db` Postgres database.
 6. Fill prompted secret values:
 
 ```properties
@@ -68,7 +68,7 @@ EVENTFLOW_MAIL_HOST=smtp provider host
 EVENTFLOW_MAIL_USERNAME=smtp username
 EVENTFLOW_MAIL_PASSWORD=smtp password
 EVENTFLOW_MAIL_FROM=no-reply@your-domain.example
-APP_PUBLIC_BASE_URL=https://eventflow-shapovalova.onrender.com
+APP_PUBLIC_BASE_URL=https://nure-eventflow.onrender.com
 ```
 
 For the first deploy, leave payments in local mode:
@@ -82,8 +82,8 @@ PAYPAL_CURRENCY=EUR
 After Render creates the service, open:
 
 ```text
-https://eventflow-shapovalova.onrender.com/actuator/health
-https://eventflow-shapovalova.onrender.com/
+https://nure-eventflow.onrender.com/actuator/health
+https://nure-eventflow.onrender.com/
 ```
 
 If Render assigned a different public URL than the one entered during setup, update `APP_PUBLIC_BASE_URL` in the web service environment variables and redeploy.
@@ -93,7 +93,7 @@ If Render assigned a different public URL than the one entered during setup, upd
 Create a PayPal webhook using the final public HTTPS URL:
 
 ```text
-https://eventflow-shapovalova.onrender.com/payments/paypal/webhook
+https://nure-eventflow.onrender.com/payments/paypal/webhook
 ```
 
 Required PayPal sandbox events:
@@ -114,7 +114,7 @@ PAYPAL_CLIENT_ID=your_sandbox_client_id
 PAYPAL_CLIENT_SECRET=your_sandbox_secret
 PAYPAL_WEBHOOK_ID=your_webhook_id
 PAYPAL_CURRENCY=EUR
-APP_PUBLIC_BASE_URL=https://eventflow-shapovalova.onrender.com
+APP_PUBLIC_BASE_URL=https://nure-eventflow.onrender.com
 ```
 
 Redeploy the web service and test a sandbox checkout.

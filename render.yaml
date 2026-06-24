@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: eventflow-shapovalova
+    name: nure-eventflow
     runtime: docker
     region: frankfurt
     healthCheckPath: /actuator/health
