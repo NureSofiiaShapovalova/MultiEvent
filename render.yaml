@@ -3,10 +3,7 @@ services:
     name: eventflow-shapovalova
     runtime: docker
     region: frankfurt
-    plan: starter
-    branch: main
     healthCheckPath: /actuator/health
-    autoDeployTrigger: commit
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
@@ -44,6 +41,3 @@ databases:
     databaseName: eventflow
     user: eventflow
     region: frankfurt
-    plan: basic-256mb
-    postgresMajorVersion: "17"
-    ipAllowList: []
