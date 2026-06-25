@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
 <head>
-    <title>Register - EventFlow</title>
+    <title th:text="#{auth.register.title}">Register - EventFlow</title>
 </head>
 <body>
 <section class="row justify-content-center py-4 py-lg-5">
@@ -9,8 +9,8 @@
         <div class="eventflow-soft-card p-4 p-md-5">
             <div class="text-center mb-4">
                 <div class="eventflow-brand-mark mx-auto mb-3" aria-hidden="true">E</div>
-                <h1 class="h3 fw-bold mb-2">Create your EventFlow account</h1>
-                <p class="eventflow-muted mb-0">Start as a visitor today. Organizer permissions can be granted later.</p>
+                <h1 class="h3 fw-bold mb-2" th:text="#{auth.register.heading}">Create your EventFlow account</h1>
+                <p class="eventflow-muted mb-0" th:text="#{auth.register.subtitle}">Start as a visitor today. Organizer permissions can be granted later.</p>
             </div>
 
             <form th:action="@{/register}" th:object="${registerForm}" method="post" class="row g-3">
@@ -18,55 +18,55 @@
 
                 <div th:if="${#fields.hasAnyErrors()}" class="col-12">
                     <div class="alert alert-danger eventflow-alert mb-0" role="alert">
-                        <div class="fw-semibold">Please check the highlighted fields.</div>
-                        <div>Some information is missing or invalid.</div>
+                        <div class="fw-semibold" th:text="#{auth.register.validationTitle}">Please check the highlighted fields.</div>
+                        <div th:text="#{auth.register.validationText}">Some information is missing or invalid.</div>
                     </div>
                 </div>
 
                 <div class="col-12">
-                    <label for="email" class="form-label fw-semibold">Email</label>
+                    <label for="email" class="form-label fw-semibold" th:text="#{auth.email}">Email</label>
                     <input id="email" type="email" th:field="*{email}" class="form-control form-control-lg" th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'" autocomplete="email" required>
                     <div class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email error</div>
                 </div>
                 <div class="col-12">
-                    <label for="password" class="form-label fw-semibold">Password</label>
+                    <label for="password" class="form-label fw-semibold" th:text="#{auth.password}">Password</label>
                     <input id="password" type="password" th:field="*{password}" class="form-control form-control-lg" th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'" autocomplete="new-password" required>
                     <div class="invalid-feedback" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password error</div>
                 </div>
                 <div class="col-md-6">
-                    <label for="firstName" class="form-label fw-semibold">First Name</label>
+                    <label for="firstName" class="form-label fw-semibold" th:text="#{auth.register.firstName}">First Name</label>
                     <input id="firstName" type="text" th:field="*{firstName}" class="form-control" th:classappend="${#fields.hasErrors('firstName')} ? 'is-invalid'" autocomplete="given-name">
                     <div class="invalid-feedback" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">First name error</div>
                 </div>
                 <div class="col-md-6">
-                    <label for="lastName" class="form-label fw-semibold">Last Name</label>
+                    <label for="lastName" class="form-label fw-semibold" th:text="#{auth.register.lastName}">Last Name</label>
                     <input id="lastName" type="text" th:field="*{lastName}" class="form-control" th:classappend="${#fields.hasErrors('lastName')} ? 'is-invalid'" autocomplete="family-name">
                     <div class="invalid-feedback" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Last name error</div>
                 </div>
                 <div class="col-md-6">
-                    <label for="phoneNumber" class="form-label fw-semibold">Phone</label>
+                    <label for="phoneNumber" class="form-label fw-semibold" th:text="#{auth.register.phone}">Phone</label>
                     <input id="phoneNumber" type="text" th:field="*{phoneNumber}" class="form-control" th:classappend="${#fields.hasErrors('phoneNumber')} ? 'is-invalid'" autocomplete="tel">
                     <div class="invalid-feedback" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}">Phone error</div>
                 </div>
                 <div class="col-md-6">
-                    <label for="city" class="form-label fw-semibold">City</label>
+                    <label for="city" class="form-label fw-semibold" th:text="#{auth.register.city}">City</label>
                     <input id="city" type="text" th:field="*{city}" class="form-control" th:classappend="${#fields.hasErrors('city')} ? 'is-invalid'" autocomplete="address-level2">
                     <div class="invalid-feedback" th:if="${#fields.hasErrors('city')}" th:errors="*{city}">City error</div>
                 </div>
                 <div class="col-12">
-                    <label for="bio" class="form-label fw-semibold">Bio</label>
+                    <label for="bio" class="form-label fw-semibold" th:text="#{auth.register.bio}">Bio</label>
                     <textarea id="bio" th:field="*{bio}" class="form-control" th:classappend="${#fields.hasErrors('bio')} ? 'is-invalid'" rows="4"></textarea>
                     <div class="invalid-feedback" th:if="${#fields.hasErrors('bio')}" th:errors="*{bio}">Bio error</div>
                 </div>
                 <div class="col-12 d-grid gap-2 d-sm-flex">
-                    <button type="submit" class="btn btn-primary btn-lg">Create account</button>
-                    <a th:href="@{/login}" class="btn btn-outline-secondary btn-lg">Back to login</a>
+                    <button type="submit" class="btn btn-primary btn-lg" th:text="#{auth.register.submit}">Create account</button>
+                    <a th:href="@{/login}" class="btn btn-outline-secondary btn-lg" th:text="#{auth.register.backToLogin}">Back to login</a>
                 </div>
             </form>
 
             <div class="text-center mt-4 pt-3 border-top">
-                <span class="eventflow-muted">Already have an account?</span>
-                <a th:href="@{/login}" class="fw-semibold">Login</a>
+                <span class="eventflow-muted" th:text="#{auth.register.hasAccount}">Already have an account?</span>
+                <a th:href="@{/login}" class="fw-semibold" th:text="#{auth.login.submit}">Login</a>
             </div>
         </div>
     </div>

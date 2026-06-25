@@ -135,6 +135,32 @@ button:focus-visible,
     font-weight: 700;
 }
 
+.eventflow-language-switcher .dropdown-menu {
+    min-width: 10rem;
+    border: 1px solid var(--ef-border);
+    border-radius: var(--ef-radius-sm);
+    box-shadow: var(--ef-shadow-sm);
+}
+
+.eventflow-language-switcher .dropdown-item {
+    border-radius: 0.55rem;
+    color: var(--ef-navy);
+    font-weight: 700;
+}
+
+.eventflow-language-switcher .dropdown-item.active,
+.eventflow-language-switcher .dropdown-item:active {
+    color: #ffffff;
+    background: var(--ef-accent);
+}
+
+.eventflow-footer {
+    border-top: 1px solid var(--ef-border);
+    color: var(--ef-navy);
+    background: rgba(255, 255, 255, 0.86);
+    backdrop-filter: blur(12px);
+}
+
 .btn-primary {
     --bs-btn-bg: var(--ef-accent);
     --bs-btn-border-color: var(--ef-accent);
@@ -571,6 +597,8 @@ button:focus-visible,
     }
 
     .eventflow-navbar-actions .btn,
+    .eventflow-navbar-actions .eventflow-language-switcher,
+    .eventflow-navbar-actions .eventflow-language-switcher .btn,
     .eventflow-navbar-actions form,
     .eventflow-navbar-actions form .btn {
         width: 100%;
