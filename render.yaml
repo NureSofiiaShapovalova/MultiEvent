@@ -28,9 +28,15 @@ services:
       - key: EVENTFLOW_MAIL_SMTP_STARTTLS
         value: "true"
       - key: EVENTFLOW_PAYMENT_PROVIDER
-        value: local
+        value: paypal
       - key: PAYPAL_MODE
         value: sandbox
+      - key: PAYPAL_CLIENT_ID
+        sync: false
+      - key: PAYPAL_CLIENT_SECRET
+        sync: false
+      - key: PAYPAL_WEBHOOK_ID
+        sync: false
       - key: PAYPAL_CURRENCY
         value: EUR
       - key: APP_PUBLIC_BASE_URL

@@ -79,6 +79,11 @@ public class ReservationLock extends BaseEntity {
         this.expiresAt = Objects.requireNonNull(releasedAt, "releasedAt must not be null");
     }
 
+    public void confirm() {
+        ensureActive();
+        this.status = ReservationStatus.CONFIRMED;
+    }
+
     public void expire(Instant expiredAt) {
         ensureActive();
         this.status = ReservationStatus.EXPIRED;

@@ -13,11 +13,15 @@ import java.util.Optional;
 import java.util.UUID;
 import nure.com.eventflow.catalog.domain.Event;
 import nure.com.eventflow.catalog.domain.EventStatus;
+import nure.com.eventflow.checkout.application.FinalizeOrderInventoryService;
 import nure.com.eventflow.checkout.domain.Order;
 import nure.com.eventflow.checkout.domain.OrderItem;
+import nure.com.eventflow.checkout.domain.ReservationLock;
+import nure.com.eventflow.checkout.domain.ReservationStatus;
 import nure.com.eventflow.checkout.infra.OrderRepository;
 import nure.com.eventflow.iam.domain.User;
 import nure.com.eventflow.iam.infra.UserRepository;
+import nure.com.eventflow.notifications.domain.OrderPaidEvent;
 import nure.com.eventflow.payment.domain.Payment;
 import nure.com.eventflow.payment.domain.PaymentAttempt;
 import nure.com.eventflow.payment.domain.PaymentAttemptType;
@@ -27,7 +31,8 @@ import nure.com.eventflow.payment.domain.PaymentPolicy;
 import nure.com.eventflow.payment.domain.PaymentStatus;
 import nure.com.eventflow.payment.infra.PaymentRepository;
 import nure.com.eventflow.payment.infra.PaymentTransactionRepository;
-import nure.com.eventflow.notifications.domain.OrderPaidEvent;
+import nure.com.eventflow.ticketing.domain.TicketInventory;
+import nure.com.eventflow.ticketing.infra.TicketInventoryRepository;
 import nure.com.eventflow.testsupport.TestEntityFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -56,6 +61,9 @@ class ConfirmPaymentServiceTest {
     private PaymentGateway paymentGateway;
 
     @Mock
+    private TicketInventoryRepository ticketInventoryRepository;
+
+    @Mock
     private Clock clock;
 
     @Mock
@@ -73,6 +81,7 @@ class ConfirmPaymentServiceTest {
                 paymentGateway,
                 new PaymentPolicy(),
                 new PaymentViewMapper(),
+                new FinalizeOrderInventoryService(ticketInventoryRepository),
                 applicationEventPublisher,
                 clock);
     }
@@ -90,12 +99,17 @@ class ConfirmPaymentServiceTest {
         when(paymentGateway.confirm(payment)).thenReturn(new PaymentGatewayResult(true, null));
         when(paymentRepository.save(any(Payment.class))).thenAnswer(invocation -> invocation.getArgument(0));
         when(orderRepository.save(any(Order.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(ticketInventoryRepository.saveAll(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
         PaymentPageView view = confirmPaymentService.confirm("buyer@example.com", order.getId());
 
+        TicketInventory inventory = order.getReservationLocks().get(0).getTicketType().getInventory();
         assertThat(view.paymentStatus()).isEqualTo("PAID");
         assertThat(payment.isPaid()).isTrue();
         assertThat(order.getStatus().name()).isEqualTo("PAID");
+        assertThat(order.getReservationLocks().get(0).getStatus()).isEqualTo(ReservationStatus.CONFIRMED);
+        assertThat(inventory.getReservedQuantity()).isZero();
+        assertThat(inventory.getSoldQuantity()).isEqualTo(2);
         assertThat(payment.getAttempts()).hasSize(2);
         verify(paymentGateway).confirm(payment);
         verify(orderRepository).save(order);
@@ -126,8 +140,12 @@ class ConfirmPaymentServiceTest {
         assertThat(view.canRetry()).isTrue();
         assertThat(payment.isFailed()).isTrue();
         assertThat(order.getStatus().name()).isEqualTo("PENDING_PAYMENT");
+        assertThat(order.getReservationLocks().get(0).getStatus()).isEqualTo(ReservationStatus.PENDING);
+        assertThat(order.getReservationLocks().get(0).getTicketType().getInventory().getReservedQuantity()).isEqualTo(2);
+        assertThat(order.getReservationLocks().get(0).getTicketType().getInventory().getSoldQuantity()).isZero();
         assertThat(payment.getAttempts()).hasSize(2);
         verify(orderRepository, never()).save(any(Order.class));
+        verify(ticketInventoryRepository, never()).saveAll(any());
         verify(applicationEventPublisher, never()).publishEvent(any());
     }
 
@@ -137,6 +155,9 @@ class ConfirmPaymentServiceTest {
         User customer = TestEntityFactory.user("buyer@example.com");
         Order order = order(customer, now.plusSeconds(900));
         Payment payment = pendingPayment(customer, order, now);
+        TicketInventory inventory = order.getReservationLocks().get(0).getTicketType().getInventory();
+        inventory.markSold(2);
+        order.getReservationLocks().get(0).confirm();
         payment.markPaid(now.plusSeconds(10));
         order.markPaid();
 
@@ -147,8 +168,11 @@ class ConfirmPaymentServiceTest {
         PaymentPageView view = confirmPaymentService.confirm("buyer@example.com", order.getId());
 
         assertThat(view.paymentStatus()).isEqualTo("PAID");
+        assertThat(inventory.getReservedQuantity()).isZero();
+        assertThat(inventory.getSoldQuantity()).isEqualTo(2);
         verify(paymentGateway, never()).confirm(any(Payment.class));
         verify(orderRepository, never()).save(any(Order.class));
+        verify(ticketInventoryRepository, never()).saveAll(any());
         verify(applicationEventPublisher, never()).publishEvent(any());
     }
 
@@ -169,6 +193,8 @@ class ConfirmPaymentServiceTest {
                 Instant.parse("2026-09-01T00:00:00Z"));
         Order order = new Order(customer, event, expiresAt);
         order.addItem(new OrderItem(ticketType, 2));
+        order.addReservationLock(new ReservationLock(ticketType, 2, expiresAt));
+        ticketType.getInventory().reserve(2);
         order.updateTotals(BigDecimal.valueOf(50), "USD");
         TestEntityFactory.setId(order, UUID.randomUUID());
         return order;

@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.time.Clock;
 import java.time.Instant;
 import java.util.Map;
+import nure.com.eventflow.checkout.application.FinalizeOrderInventoryService;
 import nure.com.eventflow.checkout.domain.Order;
 import nure.com.eventflow.checkout.infra.OrderRepository;
 import nure.com.eventflow.notifications.domain.OrderPaidEvent;
@@ -40,6 +41,7 @@ public class ProcessPaypalWebhookService {
     private final OrderRepository orderRepository;
     private final PaymentWebhookVerifier webhookVerifier;
     private final PaymentPolicy paymentPolicy;
+    private final FinalizeOrderInventoryService finalizeOrderInventoryService;
     private final ApplicationEventPublisher applicationEventPublisher;
     private final ObjectMapper objectMapper;
     private final Clock clock;
@@ -51,6 +53,7 @@ public class ProcessPaypalWebhookService {
             OrderRepository orderRepository,
             PaymentWebhookVerifier webhookVerifier,
             PaymentPolicy paymentPolicy,
+            FinalizeOrderInventoryService finalizeOrderInventoryService,
             ApplicationEventPublisher applicationEventPublisher,
             ObjectMapper objectMapper,
             Clock clock
@@ -61,6 +64,7 @@ public class ProcessPaypalWebhookService {
         this.orderRepository = orderRepository;
         this.webhookVerifier = webhookVerifier;
         this.paymentPolicy = paymentPolicy;
+        this.finalizeOrderInventoryService = finalizeOrderInventoryService;
         this.applicationEventPublisher = applicationEventPublisher;
         this.objectMapper = objectMapper;
         this.clock = clock;
@@ -152,6 +156,7 @@ public class ProcessPaypalWebhookService {
                 PaymentStatus.PAID.name(),
                 body,
                 now));
+        finalizeOrderInventoryService.markReservedInventorySold(order);
         payment.markPaid(now);
         order.markPaid();
         orderRepository.save(order);

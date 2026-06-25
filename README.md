@@ -29,6 +29,17 @@ Open:
 - Mailpit: http://localhost:8025
 - Health: http://localhost:8082/actuator/health
 
+Run the optional pgAdmin container only when you need a browser UI for the local Docker PostgreSQL database:
+
+```powershell
+docker compose --env-file .env.docker --profile tools up --build
+```
+
+- pgAdmin: http://localhost:5050
+- Default local login from `.env.docker.example`: `admin@nure-eventflow.local`
+- Change `PGADMIN_DEFAULT_PASSWORD` in your real `.env.docker` before using pgAdmin.
+- These pgAdmin values are local-only and are not used by Render.
+
 Stop containers:
 
 ```powershell
@@ -53,6 +64,8 @@ The recommended hosting target is Render with:
 - `render.yaml` as the repeatable service/database blueprint.
 
 Render sets `DATABASE_URL` for the managed Postgres database. EventFlow converts that value to the JDBC datasource format automatically, so you do not need to hand-convert it.
+
+The Blueprint uses the `frankfurt` region because the project is being deployed from Europe and the database and web service should stay in the same region. Keeping both resources together reduces latency and avoids cross-region database traffic.
 
 ### Deploy With Blueprint
 

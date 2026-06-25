@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" th:fragment="orderStatusBadge(status)">
 <body>
 <span class="badge eventflow-status"
-      th:classappend="${status == 'PENDING_PAYMENT'} ? 'eventflow-status-warning' : (${status == 'PAID'} ? 'eventflow-status-success' : 'eventflow-status-muted')"
+      th:classappend="${status == 'PENDING_PAYMENT' || status == 'REFUND_PENDING'} ? 'eventflow-status-warning' : (${status == 'PAID'} ? 'eventflow-status-success' : (${status == 'CANCELLED' || status == 'EXPIRED'} ? 'eventflow-status-danger' : 'eventflow-status-muted'))"
       th:text="${status}">
     Status
 </span>

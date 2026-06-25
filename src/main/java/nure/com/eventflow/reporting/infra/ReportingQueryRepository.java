@@ -9,17 +9,20 @@ import nure.com.eventflow.reporting.application.AdminKpiView;
 import nure.com.eventflow.reporting.application.CategoryPopularityRowView;
 import nure.com.eventflow.reporting.application.OrganizerReportsView;
 import nure.com.eventflow.reporting.application.OrganizerRevenueRowView;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class ReportingQueryRepository {
 
-    private static final String DEFAULT_CURRENCY = "USD";
-
     private final EntityManager entityManager;
+    private final String defaultCurrency;
 
-    public ReportingQueryRepository(EntityManager entityManager) {
+    public ReportingQueryRepository(
+            EntityManager entityManager,
+            @Value("${eventflow.reporting.default-currency:EUR}") String defaultCurrency) {
         this.entityManager = entityManager;
+        this.defaultCurrency = defaultCurrency;
     }
 
     public AdminKpiView adminKpis() {
@@ -37,7 +40,7 @@ public class ReportingQueryRepository {
                 count("SELECT COUNT(*) FROM orders WHERE status = 'PAID'"),
                 count("SELECT COUNT(*) FROM payments WHERE status = 'FAILED'"),
                 amount("SELECT COALESCE(SUM(total_amount), 0) FROM orders WHERE status = 'PAID'"),
-                DEFAULT_CURRENCY,
+                defaultCurrency,
                 categoryPopularity());
     }
 
@@ -52,7 +55,7 @@ public class ReportingQueryRepository {
                 paidOrders,
                 ticketsSold,
                 revenue,
-                rows.stream().map(OrganizerRevenueRowView::currency).findFirst().orElse(DEFAULT_CURRENCY),
+                rows.stream().map(OrganizerRevenueRowView::currency).findFirst().orElse(defaultCurrency),
                 soldOutTicketTypes(organizerId),
                 rows);
     }
@@ -84,7 +87,7 @@ public class ReportingQueryRepository {
                                COUNT(DISTINCT o.id),
                                COALESCE(SUM(oi.quantity), 0),
                                COALESCE(SUM(oi.line_total), 0),
-                               COALESCE(MIN(oi.currency), 'USD')
+                               COALESCE(MIN(oi.currency), ?)
                         FROM events e
                         JOIN orders o ON o.event_id = e.id AND o.status = 'PAID'
                         JOIN order_items oi ON oi.order_id = o.id
@@ -92,7 +95,8 @@ public class ReportingQueryRepository {
                         GROUP BY e.id, e.title
                         ORDER BY COALESCE(SUM(oi.line_total), 0) DESC, e.title ASC
                         """)
-                .setParameter(1, organizerId)
+                .setParameter(1, defaultCurrency)
+                .setParameter(2, organizerId)
                 .getResultList();
         return rows.stream()
                 .map(row -> new OrganizerRevenueRowView(

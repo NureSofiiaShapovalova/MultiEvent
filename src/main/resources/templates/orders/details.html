@@ -22,6 +22,12 @@
                 <div class="small text-body-secondary" th:text="${'Created: ' + order.createdAt()}">Created</div>
             </div>
         </div>
+        <div class="d-flex justify-content-end mb-3" th:if="${order.status() == 'PAID'}">
+            <a class="btn btn-outline-primary btn-sm"
+               th:href="@{/orders/{orderId}/refund-request(orderId=${order.orderId()})}">
+                Request refund
+            </a>
+        </div>
 
         <div class="table-responsive">
             <table class="table align-middle">

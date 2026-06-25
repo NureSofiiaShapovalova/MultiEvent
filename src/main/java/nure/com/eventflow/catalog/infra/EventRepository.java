@@ -30,4 +30,6 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
     long countByStatusIn(Collection<EventStatus> statuses);
 
     long countByCategory_Id(UUID categoryId);
+
+    boolean existsBySlug(String slug);
 }

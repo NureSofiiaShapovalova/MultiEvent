@@ -73,8 +73,8 @@ services:
       db:
         condition: service_healthy
     environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@eventflow.local}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@nure-eventflow.local}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-change_me_pgadmin_password}
     ports:
       - "${PGADMIN_HOST_PORT:-5050}:80"
 

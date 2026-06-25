@@ -40,7 +40,7 @@ public class Order extends BaseEntity {
     private BigDecimal totalAmount = BigDecimal.ZERO;
 
     @Column(nullable = false, length = 3)
-    private String currency = "USD";
+    private String currency = "EUR";
 
     @Column(name = "expires_at", nullable = false)
     private Instant expiresAt;
@@ -97,6 +97,10 @@ public class Order extends BaseEntity {
         return status == OrderStatus.PENDING_PAYMENT;
     }
 
+    public boolean isPaid() {
+        return status == OrderStatus.PAID;
+    }
+
     public int getTotalQuantity() {
         return items.stream().mapToInt(OrderItem::getQuantity).sum();
     }
@@ -131,9 +135,27 @@ public class Order extends BaseEntity {
         this.status = OrderStatus.PAID;
     }
 
+    public void markRefundPending() {
+        ensurePaid();
+        this.status = OrderStatus.REFUND_PENDING;
+    }
+
+    public void markRefunded() {
+        if (status != OrderStatus.REFUND_PENDING) {
+            throw new BusinessRuleViolationException("Order is not waiting for a refund.");
+        }
+        this.status = OrderStatus.REFUNDED;
+    }
+
     private void ensurePendingPayment() {
         if (!isPendingPayment()) {
             throw new BusinessRuleViolationException("Order is no longer pending payment.");
+        }
+    }
+
+    private void ensurePaid() {
+        if (!isPaid()) {
+            throw new BusinessRuleViolationException("Only paid orders can enter the refund flow.");
         }
     }
 }

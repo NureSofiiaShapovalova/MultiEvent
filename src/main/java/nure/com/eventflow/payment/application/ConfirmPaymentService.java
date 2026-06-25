@@ -4,6 +4,7 @@ import java.time.Clock;
 import java.time.Instant;
 import java.util.UUID;
 import nure.com.eventflow.checkout.domain.Order;
+import nure.com.eventflow.checkout.application.FinalizeOrderInventoryService;
 import nure.com.eventflow.checkout.infra.OrderRepository;
 import nure.com.eventflow.iam.application.EmailNormalizer;
 import nure.com.eventflow.iam.domain.User;
@@ -35,6 +36,7 @@ public class ConfirmPaymentService {
     private final PaymentGateway paymentGateway;
     private final PaymentPolicy paymentPolicy;
     private final PaymentViewMapper paymentViewMapper;
+    private final FinalizeOrderInventoryService finalizeOrderInventoryService;
     private final ApplicationEventPublisher applicationEventPublisher;
     private final Clock clock;
 
@@ -46,6 +48,7 @@ public class ConfirmPaymentService {
             PaymentGateway paymentGateway,
             PaymentPolicy paymentPolicy,
             PaymentViewMapper paymentViewMapper,
+            FinalizeOrderInventoryService finalizeOrderInventoryService,
             ApplicationEventPublisher applicationEventPublisher,
             Clock clock
     ) {
@@ -56,6 +59,7 @@ public class ConfirmPaymentService {
         this.paymentGateway = paymentGateway;
         this.paymentPolicy = paymentPolicy;
         this.paymentViewMapper = paymentViewMapper;
+        this.finalizeOrderInventoryService = finalizeOrderInventoryService;
         this.applicationEventPublisher = applicationEventPublisher;
         this.clock = clock;
     }
@@ -96,6 +100,7 @@ public class ConfirmPaymentService {
                 now));
 
         if (result.successful()) {
+            finalizeOrderInventoryService.markReservedInventorySold(order);
             payment.markPaid(now);
             order.markPaid();
             orderRepository.save(order);

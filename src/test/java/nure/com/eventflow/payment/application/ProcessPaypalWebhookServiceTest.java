@@ -2,6 +2,7 @@ package nure.com.eventflow.payment.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -15,8 +16,11 @@ import java.util.Optional;
 import java.util.UUID;
 import nure.com.eventflow.catalog.domain.Event;
 import nure.com.eventflow.catalog.domain.EventStatus;
+import nure.com.eventflow.checkout.application.FinalizeOrderInventoryService;
 import nure.com.eventflow.checkout.domain.Order;
 import nure.com.eventflow.checkout.domain.OrderItem;
+import nure.com.eventflow.checkout.domain.ReservationLock;
+import nure.com.eventflow.checkout.domain.ReservationStatus;
 import nure.com.eventflow.checkout.infra.OrderRepository;
 import nure.com.eventflow.iam.domain.User;
 import nure.com.eventflow.notifications.domain.OrderPaidEvent;
@@ -33,6 +37,8 @@ import nure.com.eventflow.payment.domain.WebhookProcessingStatus;
 import nure.com.eventflow.payment.infra.PaymentRepository;
 import nure.com.eventflow.payment.infra.PaymentTransactionRepository;
 import nure.com.eventflow.payment.infra.ProviderWebhookLogRepository;
+import nure.com.eventflow.ticketing.domain.TicketInventory;
+import nure.com.eventflow.ticketing.infra.TicketInventoryRepository;
 import nure.com.eventflow.testsupport.TestEntityFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -61,6 +67,9 @@ class ProcessPaypalWebhookServiceTest {
     private PaymentWebhookVerifier webhookVerifier;
 
     @Mock
+    private TicketInventoryRepository ticketInventoryRepository;
+
+    @Mock
     private ApplicationEventPublisher applicationEventPublisher;
 
     private ProcessPaypalWebhookService service;
@@ -75,6 +84,7 @@ class ProcessPaypalWebhookServiceTest {
                 orderRepository,
                 webhookVerifier,
                 new PaymentPolicy(),
+                new FinalizeOrderInventoryService(ticketInventoryRepository),
                 applicationEventPublisher,
                 new ObjectMapper(),
                 clock);
@@ -111,11 +121,16 @@ class ProcessPaypalWebhookServiceTest {
                 .thenReturn(Optional.of(payment));
         when(paymentRepository.save(any(Payment.class))).thenAnswer(invocation -> invocation.getArgument(0));
         when(orderRepository.save(any(Order.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(ticketInventoryRepository.saveAll(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
         service.process(Map.of(), captureCompletedWebhook());
 
+        TicketInventory inventory = order.getReservationLocks().get(0).getTicketType().getInventory();
         assertThat(payment.isPaid()).isTrue();
         assertThat(order.getStatus().name()).isEqualTo("PAID");
+        assertThat(order.getReservationLocks().get(0).getStatus()).isEqualTo(ReservationStatus.CONFIRMED);
+        assertThat(inventory.getReservedQuantity()).isZero();
+        assertThat(inventory.getSoldQuantity()).isEqualTo(2);
         assertThat(payment.getAttempts()).hasSize(2);
 
         ArgumentCaptor<ProviderWebhookLog> logCaptor = ArgumentCaptor.forClass(ProviderWebhookLog.class);
@@ -126,6 +141,53 @@ class ProcessPaypalWebhookServiceTest {
         verify(applicationEventPublisher).publishEvent(eventCaptor.capture());
         assertThat(eventCaptor.getValue().orderId()).isEqualTo(order.getId());
         assertThat(eventCaptor.getValue().customerId()).isEqualTo(customer.getId());
+    }
+
+    @Test
+    void doesNotSellInventoryTwiceWhenCaptureCompletedWebhookArrivesAfterPaymentIsAlreadyPaid() {
+        User customer = TestEntityFactory.user("buyer@example.com");
+        Order order = order(customer);
+        TicketInventory inventory = order.getReservationLocks().get(0).getTicketType().getInventory();
+        inventory.markSold(2);
+        order.getReservationLocks().get(0).confirm();
+        order.markPaid();
+        Payment payment = new Payment(
+                customer,
+                order,
+                "PAYPAL",
+                "PAYPAL-ORDER-123",
+                "https://paypal.test/approve",
+                order.getTotalAmount(),
+                order.getCurrency(),
+                Instant.parse("2026-08-15T00:00:00Z"));
+        TestEntityFactory.setId(payment, UUID.randomUUID());
+        payment.addAttempt(new PaymentAttempt(
+                PaymentAttemptType.START,
+                PaymentStatus.PENDING,
+                "PAYPAL",
+                "PAYPAL-ORDER-123",
+                order.getTotalAmount(),
+                order.getCurrency(),
+                null));
+        payment.markPaid(Instant.parse("2026-08-15T00:05:00Z"));
+
+        when(webhookLogRepository.findByProviderNameAndEventId("PAYPAL", "WH-EVENT-1")).thenReturn(Optional.empty());
+        when(webhookLogRepository.save(any(ProviderWebhookLog.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(webhookVerifier.verify(any(PaymentWebhookVerificationRequest.class)))
+                .thenReturn(new PaymentWebhookVerificationResult(true, null));
+        when(paymentRepository.findByProviderNameAndProviderReference("PAYPAL", "PAYPAL-ORDER-123"))
+                .thenReturn(Optional.of(payment));
+
+        service.process(Map.of(), captureCompletedWebhook());
+
+        assertThat(inventory.getReservedQuantity()).isZero();
+        assertThat(inventory.getSoldQuantity()).isEqualTo(2);
+        assertThat(order.getReservationLocks().get(0).getStatus()).isEqualTo(ReservationStatus.CONFIRMED);
+        assertThat(payment.getAttempts()).hasSize(1);
+        verify(ticketInventoryRepository, never()).saveAll(any());
+        verify(paymentRepository, never()).save(any(Payment.class));
+        verify(orderRepository, never()).save(any(Order.class));
+        verify(applicationEventPublisher, never()).publishEvent(any());
     }
 
     private Order order(User customer) {
@@ -146,6 +208,8 @@ class ProcessPaypalWebhookServiceTest {
         TestEntityFactory.setField(ticketType, "currency", "EUR");
         Order order = new Order(customer, event, Instant.parse("2026-08-15T00:15:00Z"));
         order.addItem(new OrderItem(ticketType, 2));
+        order.addReservationLock(new ReservationLock(ticketType, 2, order.getExpiresAt()));
+        ticketType.getInventory().reserve(2);
         order.updateTotals(BigDecimal.valueOf(50), "EUR");
         TestEntityFactory.setId(order, UUID.randomUUID());
         return order;

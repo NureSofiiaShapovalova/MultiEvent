@@ -23,7 +23,7 @@ public class TicketTypeForm {
 
     @NotBlank
     @Size(max = 3)
-    private String currency;
+    private String currency = "EUR";
 
     @NotNull
     @Positive
