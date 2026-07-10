@@ -30,4 +30,4 @@ jobs:
           docker compose --env-file .env.prod.example -f docker-compose.prod.yml config --quiet
 
       - name: Build Docker image
-        run: docker build -t eventflow-app:ci .
+        run: docker build -t multievent-app:ci .

@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: nure-eventflow
+    name: nure-multievent
     runtime: docker
     region: frankfurt
     healthCheckPath: /actuator/health
@@ -11,23 +11,23 @@ services:
         value: "10000"
       - key: DATABASE_URL
         fromDatabase:
-          name: eventflow-db
+          name: multievent-db
           property: connectionString
-      - key: EVENTFLOW_MAIL_HOST
+      - key: MULTIEVENT_MAIL_HOST
         sync: false
-      - key: EVENTFLOW_MAIL_PORT
+      - key: MULTIEVENT_MAIL_PORT
         value: "587"
-      - key: EVENTFLOW_MAIL_USERNAME
+      - key: MULTIEVENT_MAIL_USERNAME
         sync: false
-      - key: EVENTFLOW_MAIL_PASSWORD
+      - key: MULTIEVENT_MAIL_PASSWORD
         sync: false
-      - key: EVENTFLOW_MAIL_FROM
+      - key: MULTIEVENT_MAIL_FROM
         sync: false
-      - key: EVENTFLOW_MAIL_SMTP_AUTH
+      - key: MULTIEVENT_MAIL_SMTP_AUTH
         value: "true"
-      - key: EVENTFLOW_MAIL_SMTP_STARTTLS
+      - key: MULTIEVENT_MAIL_SMTP_STARTTLS
         value: "true"
-      - key: EVENTFLOW_PAYMENT_PROVIDER
+      - key: MULTIEVENT_PAYMENT_PROVIDER
         value: paypal
       - key: PAYPAL_MODE
         value: sandbox
@@ -43,7 +43,7 @@ services:
         sync: false
 
 databases:
-  - name: eventflow-db
-    databaseName: eventflow
-    user: eventflow
+  - name: multievent-db
+    databaseName: multievent
+    user: multievent
     region: frankfurt

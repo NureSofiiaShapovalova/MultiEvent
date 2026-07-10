@@ -15,13 +15,13 @@ WORKDIR /app
 RUN apt-get update \
     && apt-get install -y --no-install-recommends curl \
     && rm -rf /var/lib/apt/lists/* \
-    && groupadd --system eventflow \
-    && useradd --system --gid eventflow --home-dir /app eventflow
+    && groupadd --system multievent \
+    && useradd --system --gid multievent --home-dir /app multievent
 
-COPY --from=build /workspace/app/target/*.jar /app/eventflow.jar
+COPY --from=build /workspace/app/target/*.jar /app/multievent.jar
 
-USER eventflow
+USER multievent
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "/app/eventflow.jar"]
+ENTRYPOINT ["java", "-jar", "/app/multievent.jar"]

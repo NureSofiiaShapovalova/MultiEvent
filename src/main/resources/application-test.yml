@@ -1,11 +1,11 @@
 spring:
   mail:
-    host: ${EVENTFLOW_MAIL_HOST:localhost}
-    port: ${EVENTFLOW_MAIL_PORT:1025}
+    host: ${MULTIEVENT_MAIL_HOST:localhost}
+    port: ${MULTIEVENT_MAIL_PORT:1025}
   datasource:
-    url: ${EVENTFLOW_TEST_DB_URL:jdbc:h2:mem:eventflow_test;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false}
-    username: ${EVENTFLOW_TEST_DB_USERNAME:sa}
-    password: ${EVENTFLOW_TEST_DB_PASSWORD:}
+    url: ${MULTIEVENT_TEST_DB_URL:jdbc:h2:mem:multievent_test;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false}
+    username: ${MULTIEVENT_TEST_DB_USERNAME:sa}
+    password: ${MULTIEVENT_TEST_DB_PASSWORD:}
   jpa:
     hibernate:
       ddl-auto: create-drop

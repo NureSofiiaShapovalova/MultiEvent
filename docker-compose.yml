@@ -3,13 +3,13 @@ services:
     image: postgres:17-alpine
     restart: unless-stopped
     environment:
-      POSTGRES_DB: ${POSTGRES_DB:-eventflow}
-      POSTGRES_USER: ${POSTGRES_USER:-eventflow}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-eventflow_dev_password}
+      POSTGRES_DB: ${POSTGRES_DB:-multievent}
+      POSTGRES_USER: ${POSTGRES_USER:-multievent}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-multievent_dev_password}
     ports:
       - "${POSTGRES_HOST_PORT:-5433}:5432"
     volumes:
-      - eventflow_postgres_data:/var/lib/postgresql/data
+      - multievent_postgres_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
       interval: 10s
@@ -28,7 +28,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: eventflow-app:local
+    image: multievent-app:local
     restart: unless-stopped
     depends_on:
       db:
@@ -38,17 +38,17 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: docker
       SERVER_PORT: 8080
-      EVENTFLOW_DB_URL: jdbc:postgresql://db:5432/${POSTGRES_DB:-eventflow}
-      EVENTFLOW_DB_USERNAME: ${POSTGRES_USER:-eventflow}
-      EVENTFLOW_DB_PASSWORD: ${POSTGRES_PASSWORD:-eventflow_dev_password}
-      EVENTFLOW_MAIL_HOST: mailpit
-      EVENTFLOW_MAIL_PORT: 1025
-      EVENTFLOW_MAIL_USERNAME: ${EVENTFLOW_MAIL_USERNAME:-}
-      EVENTFLOW_MAIL_PASSWORD: ${EVENTFLOW_MAIL_PASSWORD:-}
-      EVENTFLOW_MAIL_FROM: ${EVENTFLOW_MAIL_FROM:-no-reply@eventflow.local}
-      EVENTFLOW_MAIL_SMTP_AUTH: "false"
-      EVENTFLOW_MAIL_SMTP_STARTTLS: "false"
-      EVENTFLOW_PAYMENT_PROVIDER: ${EVENTFLOW_PAYMENT_PROVIDER:-local}
+      MULTIEVENT_DB_URL: jdbc:postgresql://db:5432/${POSTGRES_DB:-multievent}
+      MULTIEVENT_DB_USERNAME: ${POSTGRES_USER:-multievent}
+      MULTIEVENT_DB_PASSWORD: ${POSTGRES_PASSWORD:-multievent_dev_password}
+      MULTIEVENT_MAIL_HOST: mailpit
+      MULTIEVENT_MAIL_PORT: 1025
+      MULTIEVENT_MAIL_USERNAME: ${MULTIEVENT_MAIL_USERNAME:-}
+      MULTIEVENT_MAIL_PASSWORD: ${MULTIEVENT_MAIL_PASSWORD:-}
+      MULTIEVENT_MAIL_FROM: ${MULTIEVENT_MAIL_FROM:-no-reply@multievent.local}
+      MULTIEVENT_MAIL_SMTP_AUTH: "false"
+      MULTIEVENT_MAIL_SMTP_STARTTLS: "false"
+      MULTIEVENT_PAYMENT_PROVIDER: ${MULTIEVENT_PAYMENT_PROVIDER:-local}
       PAYPAL_MODE: ${PAYPAL_MODE:-sandbox}
       PAYPAL_CLIENT_ID: ${PAYPAL_CLIENT_ID:-}
       PAYPAL_CLIENT_SECRET: ${PAYPAL_CLIENT_SECRET:-}
@@ -73,10 +73,10 @@ services:
       db:
         condition: service_healthy
     environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@nure-eventflow.local}
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@nure-multievent.local}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-change_me_pgadmin_password}
     ports:
       - "${PGADMIN_HOST_PORT:-5050}:80"
 
 volumes:
-  eventflow_postgres_data:
+  multievent_postgres_data:

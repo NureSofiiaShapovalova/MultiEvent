@@ -1,2 +1,2 @@
 org.springframework.boot.env.EnvironmentPostProcessor=\
-nure.com.eventflow.bootstrap.config.DatabaseUrlEnvironmentPostProcessor
+nure.com.multievent.bootstrap.config.DatabaseUrlEnvironmentPostProcessor

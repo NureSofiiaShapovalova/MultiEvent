@@ -1,13 +1,13 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
 <head>
-    <title>Events - EventFlow</title>
+    <title>Events - MultiEvent</title>
 </head>
 <body>
 <section>
     <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
         <div>
-            <p class="eventflow-section-kicker mb-1">Browse EventFlow</p>
+            <p class="multievent-section-kicker mb-1">Browse MultiEvent</p>
             <h1 class="h2 fw-bold mb-2">Events</h1>
             <p class="text-body-secondary mb-0">Search by keyword, category, city, date, and sort order.</p>
         </div>
@@ -16,8 +16,8 @@
 
     <div th:replace="~{fragments/filter-form :: filterForm(${searchForm}, ${categories})}"></div>
 
-    <div th:if="${events.empty}" class="eventflow-empty-state text-center p-5">
-        <div class="eventflow-empty-mark mb-3">EF</div>
+    <div th:if="${events.empty}" class="multievent-empty-state text-center p-5">
+        <div class="multievent-empty-mark mb-3">EF</div>
         <h2 class="h5 fw-semibold mb-2">No events match your filters</h2>
         <p class="text-body-secondary mb-4">Try another keyword, city, date range, or category.</p>
         <a th:href="@{/events}" class="btn btn-outline-primary">Reset filters</a>

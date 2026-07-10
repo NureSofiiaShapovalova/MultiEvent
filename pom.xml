@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>nure.com</groupId>
-    <artifactId>eventflow</artifactId>
+    <artifactId>multievent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>eventflow</name>
-    <description>EventFlow event management and ticketing web application</description>
+    <name>multievent</name>
+    <description>MultiEvent event management and ticketing web application</description>
     <url/>
     <licenses>
         <license/>

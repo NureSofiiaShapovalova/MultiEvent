@@ -1,23 +1,23 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
 <head>
-    <title th:text="#{auth.login.title}">Login - EventFlow</title>
+    <title th:text="#{auth.login.title}">Login - MultiEvent</title>
 </head>
 <body>
 <section class="row justify-content-center py-4 py-lg-5">
     <div class="col-12 col-sm-10 col-md-8 col-lg-5 col-xl-4">
-        <div class="eventflow-soft-card p-4 p-md-5">
+        <div class="multievent-soft-card p-4 p-md-5">
             <div class="text-center mb-4">
-                <div class="eventflow-brand-mark mx-auto mb-3" aria-hidden="true">E</div>
+                <div class="multievent-brand-mark mx-auto mb-3" aria-hidden="true">E</div>
                 <h1 class="h3 fw-bold mb-2" th:text="#{auth.login.heading}">Welcome back</h1>
-                <p class="eventflow-muted mb-0" th:text="#{auth.login.subtitle}">Sign in to manage events, orders, and tickets.</p>
+                <p class="multievent-muted mb-0" th:text="#{auth.login.subtitle}">Sign in to manage events, orders, and tickets.</p>
             </div>
 
-            <div th:if="${param.error}" class="alert alert-danger eventflow-alert" role="alert">
+            <div th:if="${param.error}" class="alert alert-danger multievent-alert" role="alert">
                 <div class="fw-semibold" th:text="#{auth.login.errorTitle}">Could not sign you in.</div>
                 <div th:text="#{auth.login.errorText}">Check your email and password, then try again.</div>
             </div>
-            <div th:if="${param.logout}" class="alert alert-success eventflow-alert" role="alert" th:text="#{auth.login.logout}">
+            <div th:if="${param.logout}" class="alert alert-success multievent-alert" role="alert" th:text="#{auth.login.logout}">
                 You have been logged out.
             </div>
 
@@ -35,7 +35,7 @@
             </form>
 
             <div class="text-center mt-4 pt-3 border-top">
-                <span class="eventflow-muted" th:text="#{auth.login.noAccount}">No account yet?</span>
+                <span class="multievent-muted" th:text="#{auth.login.noAccount}">No account yet?</span>
                 <a th:href="@{/register}" class="fw-semibold" th:text="#{auth.login.createOne}">Create one</a>
             </div>
         </div>

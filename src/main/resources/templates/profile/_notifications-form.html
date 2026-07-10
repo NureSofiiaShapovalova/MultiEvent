@@ -7,7 +7,7 @@
            th:field="*{emailEnabled}"
            th:classappend="${#fields.hasErrors('emailEnabled')} ? 'is-invalid'">
     <label class="form-check-label" for="emailEnabled">Email notifications</label>
-    <div class="form-text">Allow EventFlow to send email notifications.</div>
+    <div class="form-text">Allow MultiEvent to send email notifications.</div>
     <div class="invalid-feedback" th:if="${#fields.hasErrors('emailEnabled')}" th:errors="*{emailEnabled}">Email notification error</div>
 </div>
 

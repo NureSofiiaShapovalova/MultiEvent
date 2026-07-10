@@ -7,7 +7,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:?POSTGRES_USER is required}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
     volumes:
-      - eventflow_postgres_data:/var/lib/postgresql/data
+      - multievent_postgres_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
       interval: 10s
@@ -16,7 +16,7 @@ services:
       start_period: 10s
 
   app:
-    image: ${EVENTFLOW_IMAGE:-eventflow-app:latest}
+    image: ${MULTIEVENT_IMAGE:-multievent-app:latest}
     build:
       context: .
       dockerfile: Dockerfile
@@ -27,17 +27,17 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: prod
       SERVER_PORT: 8080
-      EVENTFLOW_DB_URL: jdbc:postgresql://db:5432/${POSTGRES_DB:?POSTGRES_DB is required}
-      EVENTFLOW_DB_USERNAME: ${POSTGRES_USER:?POSTGRES_USER is required}
-      EVENTFLOW_DB_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
-      EVENTFLOW_MAIL_HOST: ${EVENTFLOW_MAIL_HOST:?EVENTFLOW_MAIL_HOST is required}
-      EVENTFLOW_MAIL_PORT: ${EVENTFLOW_MAIL_PORT:-587}
-      EVENTFLOW_MAIL_USERNAME: ${EVENTFLOW_MAIL_USERNAME:?EVENTFLOW_MAIL_USERNAME is required}
-      EVENTFLOW_MAIL_PASSWORD: ${EVENTFLOW_MAIL_PASSWORD:?EVENTFLOW_MAIL_PASSWORD is required}
-      EVENTFLOW_MAIL_FROM: ${EVENTFLOW_MAIL_FROM:?EVENTFLOW_MAIL_FROM is required}
-      EVENTFLOW_MAIL_SMTP_AUTH: ${EVENTFLOW_MAIL_SMTP_AUTH:-true}
-      EVENTFLOW_MAIL_SMTP_STARTTLS: ${EVENTFLOW_MAIL_SMTP_STARTTLS:-true}
-      EVENTFLOW_PAYMENT_PROVIDER: paypal
+      MULTIEVENT_DB_URL: jdbc:postgresql://db:5432/${POSTGRES_DB:?POSTGRES_DB is required}
+      MULTIEVENT_DB_USERNAME: ${POSTGRES_USER:?POSTGRES_USER is required}
+      MULTIEVENT_DB_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+      MULTIEVENT_MAIL_HOST: ${MULTIEVENT_MAIL_HOST:?MULTIEVENT_MAIL_HOST is required}
+      MULTIEVENT_MAIL_PORT: ${MULTIEVENT_MAIL_PORT:-587}
+      MULTIEVENT_MAIL_USERNAME: ${MULTIEVENT_MAIL_USERNAME:?MULTIEVENT_MAIL_USERNAME is required}
+      MULTIEVENT_MAIL_PASSWORD: ${MULTIEVENT_MAIL_PASSWORD:?MULTIEVENT_MAIL_PASSWORD is required}
+      MULTIEVENT_MAIL_FROM: ${MULTIEVENT_MAIL_FROM:?MULTIEVENT_MAIL_FROM is required}
+      MULTIEVENT_MAIL_SMTP_AUTH: ${MULTIEVENT_MAIL_SMTP_AUTH:-true}
+      MULTIEVENT_MAIL_SMTP_STARTTLS: ${MULTIEVENT_MAIL_SMTP_STARTTLS:-true}
+      MULTIEVENT_PAYMENT_PROVIDER: paypal
       PAYPAL_MODE: ${PAYPAL_MODE:-live}
       PAYPAL_CLIENT_ID: ${PAYPAL_CLIENT_ID:?PAYPAL_CLIENT_ID is required}
       PAYPAL_CLIENT_SECRET: ${PAYPAL_CLIENT_SECRET:?PAYPAL_CLIENT_SECRET is required}
@@ -54,4 +54,4 @@ services:
       start_period: 60s
 
 volumes:
-  eventflow_postgres_data:
+  multievent_postgres_data:

@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
 <head>
-    <title>Organizer Dashboard - EventFlow</title>
+    <title>Organizer Dashboard - MultiEvent</title>
 </head>
 <body>
 <section>
@@ -21,7 +21,7 @@
 
     <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-4 g-3 mb-4">
         <div class="col">
-            <div class="card h-100 border-0 rounded-4 shadow-sm eventflow-kpi-accent">
+            <div class="card h-100 border-0 rounded-4 shadow-sm multievent-kpi-accent">
                 <div class="card-body p-4">
                     <div class="d-flex justify-content-between align-items-start gap-3">
                         <div>
@@ -35,7 +35,7 @@
             </div>
         </div>
         <div class="col">
-            <div class="card h-100 border-0 rounded-4 shadow-sm eventflow-kpi-accent eventflow-kpi-accent-success">
+            <div class="card h-100 border-0 rounded-4 shadow-sm multievent-kpi-accent multievent-kpi-accent-success">
                 <div class="card-body p-4">
                     <div class="d-flex justify-content-between align-items-start gap-3">
                         <div>
@@ -49,7 +49,7 @@
             </div>
         </div>
         <div class="col">
-            <div class="card h-100 border-0 rounded-4 shadow-sm eventflow-kpi-accent eventflow-kpi-accent-muted">
+            <div class="card h-100 border-0 rounded-4 shadow-sm multievent-kpi-accent multievent-kpi-accent-muted">
                 <div class="card-body p-4">
                     <div class="d-flex justify-content-between align-items-start gap-3">
                         <div>
@@ -63,7 +63,7 @@
             </div>
         </div>
         <div class="col">
-            <div class="card h-100 border-0 rounded-4 shadow-sm eventflow-kpi-accent eventflow-kpi-accent-warning">
+            <div class="card h-100 border-0 rounded-4 shadow-sm multievent-kpi-accent multievent-kpi-accent-warning">
                 <div class="card-body p-4">
                     <div class="d-flex justify-content-between align-items-start gap-3">
                         <div>
@@ -94,7 +94,7 @@
         </div>
 
         <div th:if="${!dashboard.recentEvents().isEmpty()}" class="table-responsive">
-            <table class="table align-middle mb-0 eventflow-data-table">
+            <table class="table align-middle mb-0 multievent-data-table">
                 <thead class="table-light">
                 <tr>
                     <th>Event</th>

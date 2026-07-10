@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" th:fragment="paymentStatusBadge(status)">
 <body>
-<span class="badge eventflow-status"
-      th:classappend="${status == 'PAID'} ? 'eventflow-status-success' : (${status == 'FAILED'} ? 'eventflow-status-danger' : 'eventflow-status-warning')"
+<span class="badge multievent-status"
+      th:classappend="${status == 'PAID'} ? 'multievent-status-success' : (${status == 'FAILED'} ? 'multievent-status-danger' : 'multievent-status-warning')"
       th:text="${status}">
     Status
 </span>

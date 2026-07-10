@@ -1,6 +1,6 @@
 spring:
   application:
-    name: eventflow
+    name: multievent
   profiles:
     default: local
   jpa:
@@ -19,19 +19,19 @@ spring:
 server:
   port: ${SERVER_PORT:${PORT:8080}}
 
-eventflow:
+multievent:
   demo:
-    enabled: ${EVENTFLOW_DEMO_DATA_ENABLED:true}
-    admin-email: ${EVENTFLOW_DEMO_ADMIN_EMAIL:admin@nure-eventflow.local}
-    admin-password: ${EVENTFLOW_DEMO_ADMIN_PASSWORD:admin12345}
-    organizer-email: ${EVENTFLOW_DEMO_ORGANIZER_EMAIL:organizer@nure-eventflow.local}
-    organizer-password: ${EVENTFLOW_DEMO_ORGANIZER_PASSWORD:organizer12345}
-    user-email: ${EVENTFLOW_DEMO_USER_EMAIL:user@nure-eventflow.local}
-    user-password: ${EVENTFLOW_DEMO_USER_PASSWORD:user12345}
+    enabled: ${MULTIEVENT_DEMO_DATA_ENABLED:true}
+    admin-email: ${MULTIEVENT_DEMO_ADMIN_EMAIL:admin@nure-multievent.local}
+    admin-password: ${MULTIEVENT_DEMO_ADMIN_PASSWORD:admin12345}
+    organizer-email: ${MULTIEVENT_DEMO_ORGANIZER_EMAIL:organizer@nure-multievent.local}
+    organizer-password: ${MULTIEVENT_DEMO_ORGANIZER_PASSWORD:organizer12345}
+    user-email: ${MULTIEVENT_DEMO_USER_EMAIL:user@nure-multievent.local}
+    user-password: ${MULTIEVENT_DEMO_USER_PASSWORD:user12345}
   reporting:
-    default-currency: ${EVENTFLOW_REPORTING_DEFAULT_CURRENCY:${PAYPAL_CURRENCY:EUR}}
+    default-currency: ${MULTIEVENT_REPORTING_DEFAULT_CURRENCY:${PAYPAL_CURRENCY:EUR}}
   payment:
-    provider: ${EVENTFLOW_PAYMENT_PROVIDER:local}
+    provider: ${MULTIEVENT_PAYMENT_PROVIDER:local}
     paypal:
       mode: ${PAYPAL_MODE:sandbox}
       client-id: ${PAYPAL_CLIENT_ID:}
