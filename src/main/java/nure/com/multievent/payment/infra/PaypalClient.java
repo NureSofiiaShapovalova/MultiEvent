@@ -135,11 +135,13 @@ public class PaypalClient {
 
         Map<String, Object> purchaseUnit = new LinkedHashMap<>();
         purchaseUnit.put("custom_id", request.orderId().toString());
+        purchaseUnit.put("description", "MultiEvent digital ticket order");
         purchaseUnit.put("amount", amount);
 
         Map<String, Object> applicationContext = new LinkedHashMap<>();
         applicationContext.put("brand_name", "MultiEvent");
         applicationContext.put("user_action", "PAY_NOW");
+        applicationContext.put("shipping_preference", "NO_SHIPPING");
         applicationContext.put("return_url", publicUrl("/checkout/orders/" + request.orderId() + "/payment/paypal/return"));
         applicationContext.put("cancel_url", publicUrl("/checkout/orders/" + request.orderId() + "/payment/paypal/cancel"));
 
