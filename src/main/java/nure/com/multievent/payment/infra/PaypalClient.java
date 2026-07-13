@@ -141,6 +141,7 @@ public class PaypalClient {
         Map<String, Object> applicationContext = new LinkedHashMap<>();
         applicationContext.put("brand_name", "MultiEvent");
         applicationContext.put("user_action", "PAY_NOW");
+        applicationContext.put("landing_page", "BILLING");
         applicationContext.put("shipping_preference", "NO_SHIPPING");
         applicationContext.put("return_url", publicUrl("/checkout/orders/" + request.orderId() + "/payment/paypal/return"));
         applicationContext.put("cancel_url", publicUrl("/checkout/orders/" + request.orderId() + "/payment/paypal/cancel"));
