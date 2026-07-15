@@ -61,6 +61,42 @@ button:focus-visible,
     box-shadow: var(--ef-focus-ring);
 }
 
+.multievent-password-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ef-muted);
+    border-color: var(--ef-border);
+    background: #ffffff;
+}
+
+.multievent-password-toggle:hover,
+.multievent-password-toggle:focus {
+    color: var(--ef-accent-strong);
+    border-color: rgba(37, 99, 235, 0.38);
+    background: var(--ef-accent-soft);
+}
+
+.multievent-password-toggle.is-visible {
+    color: #ffffff;
+    border-color: var(--ef-accent);
+    background: var(--ef-accent);
+}
+
+.multievent-password-icon {
+    width: 1.1rem;
+    height: 1.1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.8;
+}
+
+.input-group .form-control.is-invalid {
+    z-index: 3;
+}
+
 .multievent-main {
     padding-top: 2rem;
     padding-bottom: 3rem;

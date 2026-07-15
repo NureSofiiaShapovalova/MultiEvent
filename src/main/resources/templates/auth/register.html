@@ -30,8 +30,21 @@
                 </div>
                 <div class="col-12">
                     <label for="password" class="form-label fw-semibold" th:text="#{auth.password}">Password</label>
-                    <input id="password" type="password" th:field="*{password}" class="form-control form-control-lg" th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'" autocomplete="new-password" required>
-                    <div class="invalid-feedback" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password error</div>
+                    <div class="input-group input-group-lg">
+                        <input id="password" type="password" th:field="*{password}" class="form-control" th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'" autocomplete="new-password" required>
+                        <button type="button"
+                                class="btn btn-outline-secondary multievent-password-toggle"
+                                data-password-toggle
+                                data-password-toggle-target="password"
+                                th:attr="aria-label=#{auth.password.show},title=#{auth.password.show},data-show-label=#{auth.password.show},data-hide-label=#{auth.password.hide}">
+                            <svg class="multievent-password-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                            <span class="visually-hidden" th:text="#{auth.password.show}">Show password</span>
+                        </button>
+                    </div>
+                    <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password error</div>
                 </div>
                 <div class="col-md-6">
                     <label for="firstName" class="form-label fw-semibold" th:text="#{auth.register.firstName}">First Name</label>
